@@ -235,12 +235,49 @@ input::placeholder { color: #444466; }
   background: var(--gradient1);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.result-concept {
-  background: var(--surface2); border: 1px solid var(--border); border-radius: 14px;
-  padding: 18px; text-align: center; margin: 16px 0;
+.hint-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 6px;
 }
-.result-concept .concept-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); margin-bottom: 6px; }
-.result-concept .concept-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+.hint-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+  padding: 12px;
+  background: var(--surface2);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent);
+}
+
+.result-concept {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.result-concept .concept-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+
+.result-concept .concept-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.7;
+  text-align: left;
+}
 
 .result-status {
   text-align: center; font-size: 18px; font-weight: 800; margin: 16px 0;
@@ -363,15 +400,15 @@ input::placeholder { color: #444466; }
   <div class="header">
     <div class="header-badge">MATA39 — 2026.2</div>
     <h1>FORCA</h1>
-    <div class="subtitle">Adivinhe palavras de computação antes que o boneco apareça!</div>
+    <div class="subtitle">Aprenda informatica basica enquanto joga! Descubra palavras com dicas progressivas.</div>
   </div>
 
   <!-- INTRO -->
   <div id="screen-intro" class="screen active">
     <div class="card">
       <div class="intro-hero">
-        <div class="big-icon">&#128128;</div>
-        <p>Descubra palavras relacionadas a computação usando dicas!</p>
+        <div class="big-icon">&#128218;</div>
+        <p>Aprenda conceitos fundamentais de informatica de forma divertida!</p>
       </div>
     </div>
     <div class="card">
@@ -385,26 +422,26 @@ input::placeholder { color: #444466; }
         <div class="rule-card">
           <div class="step">2</div>
           <div class="rule-title">Leia a dica</div>
-          <div class="rule-desc">Cada rodada comeca com uma dica para o jogador da vez</div>
+          <div class="rule-desc">Dicas progressivas vao revelando informacoes gradualmente</div>
         </div>
         <div class="rule-card">
           <div class="step">3</div>
           <div class="rule-title">Tente letras</div>
-          <div class="rule-desc">Errou? A vez passa pro proximo. 6 erros = perde!</div>
+          <div class="rule-desc">Errou? A dica avanca! 6 erros = perde a rodada</div>
         </div>
         <div class="rule-card">
           <div class="step">4</div>
-          <div class="rule-title">Chute a palavra</div>
-          <div class="rule-desc">Quer arriscar? Chute o nome completo — se errar, elimina!</div>
+          <div class="rule-title">Aprenda!</div>
+          <div class="rule-desc">Apos cada rodada, veja a explicacao completa do conceito</div>
         </div>
       </div>
     </div>
     <div class="card">
-      <div class="card-title">Pontuação</div>
+      <div class="card-title">Pontuacao</div>
       <div class="scoring-box" style="border:none; background:transparent; padding:0;">
         <div class="scoring-row"><span class="pts green">+1</span><span class="desc">Acertou uma letra que existia na palavra</span></div>
-        <div class="scoring-row"><span class="pts gold">+Bônus</span><span class="desc">Chutou e acertou a palavra inteira</span></div>
-        <div class="scoring-row"><span class="pts red">-1</span><span class="desc">Errou uma letra (e a vez passa)</span></div>
+        <div class="scoring-row"><span class="pts gold">+Bonus</span><span class="desc">Chutou e acertou a palavra inteira</span></div>
+        <div class="scoring-row"><span class="pts red">-1</span><span class="desc">Errou uma letra (e a dica avanca)</span></div>
         <div class="scoring-row"><span class="pts red">ELIM</span><span class="desc">Chutou a palavra e errou = eliminado</span></div>
       </div>
     </div>
@@ -476,7 +513,7 @@ input::placeholder { color: #444466; }
         </div>
 
         <div class="hint-box">
-          <div class="hint-label">Dica</div>
+          <div class="hint-label"><span id="hintLevel">Dica 1/3</span></div>
           <div class="hint-text" id="hintText">-</div>
         </div>
 
@@ -501,13 +538,10 @@ input::placeholder { color: #444466; }
         <div class="label">Palavra</div>
         <div class="the-word" id="resultWord"></div>
       </div>
+      <div class="result-hint-info" id="resultHintLevel" style="text-align:center; font-size:12px; color:var(--text2); margin:8px 0;"></div>
       <div class="result-concept">
-        <div class="concept-label">Conceito</div>
-        <div class="concept-text" id="resultConcept"></div>
-      </div>
-      <div class="hint-box" style="margin-top:12px">
-        <div class="hint-label">Dica que foi mostrada</div>
-        <div class="hint-text" id="resultHint"></div>
+        <div class="concept-label">O que voce aprendeu</div>
+        <div class="concept-text" id="resultLesson" style="text-align:left; line-height:1.6;"></div>
       </div>
     </div>
     <div class="card">
@@ -515,7 +549,7 @@ input::placeholder { color: #444466; }
       <div class="podium" id="resultScores"></div>
     </div>
     <div class="text-center mt-24">
-      <button class="btn btn-gold" onclick="nextRound()">Próxima Rodada</button>
+      <button class="btn btn-gold" onclick="nextRound()">Proxima Rodada</button>
     </div>
   </div>
 
@@ -536,97 +570,506 @@ input::placeholder { color: #444466; }
     </div>
   </div>
 
-  <div class="footer">MATA39 — 2026.2 — Equipe 3 — Seminário 1</div>
+  <div class="footer">MATA39 — 2026.2 — Equipe 3 — Jogo Educacional de Informatica</div>
 </div>
 
 <script>
 const WORDS_DB = [
-  { word: "MOUSE", hint: "Dispositivo que voce segura na mao para apontar na tela", concept: "Dispositivo de entrada que controla o cursor do computador" },
-  { word: "TECLADO", hint: "Tem muitas letras e numeros, voce digita nele", concept: "Dispositivo de entrada usado para digitar textos e comandos" },
-  { word: "MONITOR", hint: "E a tela onde voce ve tudo do computador", concept: "Dispositivo de saida que exibe imagens e texto" },
-  { word: "CPU", hint: "E o cerebro do computador, processa tudo", concept: "Unidade Central de Processamento - executa instrucoes do programa" },
-  { word: "IMPRESSORA", hint: "Coloca papel e sai o documento impresso", concept: "Dispositivo de saida que imprime documentos em papel" },
-  { word: "INTERNET", hint: "Rede mundial que conecta computadores", concept: "Rede global de computadores interligados" },
-  { word: "EMAIL", hint: "Voce manda mensagens por ele, tipo uma carta digital", concept: "Correio eletronico - sistema de envio de mensagens digitais" },
-  { word: "SENHA", hint: "Voce digita para entrar em uma conta, deve ser secreta", concept: "Sequencia de caracteres usada para autenticacao de usuario" },
-  { word: "ARQUIVO", hint: "Voce salva coisas nele, pode ser documento ou imagem", concept: "Conjunto de dados armazenados no computador" },
-  { word: "PASTA", hint: "Dentro dela voce guarda varios arquivos", concept: "Diretorio que organiza e agrupa arquivos" },
-  { word: "DOWNLOAD", hint: "Baixar algo da internet para o computador", concept: "Transferencia de dados de um servidor para o seu dispositivo" },
-  { word: "UPLOAD", hint: "Enviar algo do seu computador para a internet", concept: "Transferencia de dados do seu dispositivo para um servidor" },
-  { word: "SITE", hint: "Voce acessa pelo navegador, e uma pagina na web", concept: "Conjunto de paginas web acessiveis pela internet" },
-  { word: "NAVEGADOR", hint: "Programa que voce usa para acessar sites (Chrome, Firefox)", concept: "Software que permite acessar e visualizar paginas web" },
-  { word: "SOFTWARE", hint: "Sao os programas que rodam no computador", concept: "Conjunto de programas e dados que fazem o computador funcionar" },
-  { word: "HARDWARE", hint: "Sao as partes fisicas que voce pode tocar", concept: "Componentes fisicos do computador (pecas e perifericos)" },
-  { word: "BANCO", hint: "Guarda muitas informacoes organizadas (Dados)", concept: "Conjunto organizado de dados armazenados digitalmente" },
-  { word: "PROGRAMA", hint: "Voce instala para usar no computador (app)", concept: "Sequencia de instrucoes que o computador executa" },
-  { word: "TABLET", hint: "Computador portatil com tela sensivel ao toque", concept: "Dispositivo movel com tela touchscreen" },
-  { word: "NOTEBOOK", hint: "Computador portatil que fecha como um livro", concept: "Computador portatil de pequeno porte" },
-  { word: "WEBCAM", hint: "Camera que fica no computador para videochamadas", concept: "Camera digital para comunicacao por video" },
-  { word: "FONE", hint: "Voce coloca no ouvido para ouvir audio", concept: "Dispositivo de audio pessoal para ouvir musica ou chamadas" },
-  { word: "CABO", hint: "Fio que liga um dispositivo ao outro", concept: "Conector fisico para transmissao de dados ou energia" },
-  { word: "BLUETOOTH", hint: "Conexao sem fio de curta distancia", concept: "Tecnologia sem fio para troca de dados entre dispositivos" },
-  { word: "WIFI", hint: "Internet sem fio, voce conecta pelo sinal", concept: "Tecnologia de rede sem fio para acesso a internet" },
-  { word: "CELULAR", hint: "Telefone inteligente que voce leva na mao", concept: "Dispositivo movel multifuncional com telefone e internet" },
-  { word: "BIT", hint: "A menor unidade de informacao (0 ou 1)", concept: "Unidade basica de informacao digital - pode ser 0 ou 1" },
-  { word: "BYTE", hint: "Conjunto de 8 bits", concept: "Unidade de dados composta por 8 bits" },
-  { word: "DADOS", hint: "Informacoes guardadas no computador", concept: "Informacoes armazenadas ou processadas pelo computador" },
-  { word: "TEXTO", hint: "Sequencia de letras e palavras", concept: "Conjunto de caracteres que formam palavras e frases" },
-  { word: "NUMERO", hint: "Valor quantitativo, como 1, 2, 3...", concept: "Representacao matematica de uma quantidade" },
-  { word: "SISTEMA", hint: "Conjunto de componentes que trabalham juntos", concept: "Conjunto integrado de componentes que funcionam como um todo" },
-  { word: "REDE", hint: "Conjunto de computadores conectados", concept: "Grupo de dispositivos interligados para compartilhar recursos" },
-  { word: "SERVIDOR", hint: "Computador que atende pedidos de outros", concept: "Computador que fornece servicos e dados para outros dispositivos" },
-  { word: "KERNEL", hint: "Nucleo do sistema operacional", concept: "Parte central do SO que gerencia recursos do hardware" },
-  { word: "LINUX", hint: "Sistema operacional gratuito e de codigo aberto", concept: "Sistema operacional open source criado por Linus Torvalds" },
-  { word: "WINDOWS", hint: "Sistema operacional da Microsoft", concept: "Sistema operacional mais usado do mundo, criado pela Microsoft" },
-  { word: "MACOS", hint: "Sistema operacional da Apple", concept: "Sistema operacional dos computadores Mac da Apple" },
-  { word: "ANDROID", hint: "Sistema operacional de celulares da Google", concept: "Sistema operacional mobile open source do Google" },
-  { word: "APP", hint: "Aplicativo que voce instala no celular", concept: "Aplicativo de software para dispositivos moveis" },
-  { word: "CLOUD", hint: "Armazenamento na nuvem, pela internet", concept: "Servico de armazenamento e processamento via internet" },
-  { word: "CACHE", hint: "Memoria temporaria para acesso rapido", concept: "Armazenamento temporario para dados de acesso frequente" },
-  { word: "BUG", hint: "Erro ou falha no programa", concept: "Erro no codigo que causa comportamento inesperado" },
-  { word: "DEBUG", hint: "Processo de encontrar e corrigir erros", concept: "Atividade de identificar e remover bugs do codigo" },
-  { word: "LOG", hint: "Registro de eventos do sistema", concept: "Arquivo que registra acoes e eventos do sistema" },
-  { word: "CHAT", hint: "Conversa por mensagens na internet", concept: "Sistema de comunicacao por mensagens em tempo real" },
-  { word: "VIDEO", hint: "Sequencia de imagens em movimento", concept: "Midia visual com imagens em sequencia" },
-  { word: "AUDIO", hint: "Som, musica, voz", concept: "Sinal sonoro processado digitalmente" },
-  { word: "FOTO", hint: "Imagem capturada por camera", concept: "Imagem digital capturada por dispositivo" },
-  { word: "PIX", hint: "Pagamento instantaneo feito pelo banco", concept: "Sistema de transferencia bancaria instantanea" },
-  { word: "LINK", hint: "Endereco que voce clica para acessar algo", concept: "Referencia eletronica para acessar um recurso" },
-  { word: "GOOGLE", hint: "Mecanismo de busca mais famoso do mundo", concept: "Empresa de tecnologia e buscador na internet" },
-  { word: "LOGIN", hint: "Processo de entrar em uma conta", concept: "Acao de autenticar-se em um sistema" },
-  { word: "PIXEL", hint: "Menor ponto que forma uma imagem na tela", concept: "Menor elemento de uma imagem digital" },
-  { word: "TELA", hint: "Display do computador ou celular", concept: "Superficie de exibicao de informacoes visuais" },
-  { word: "MEMORIA", hint: "Guarda informacoes temporariamente", concept: "Componente que armazena dados para acesso rapido" },
-  { word: "TABELA", hint: "Organizacao de dados em linhas e colunas", concept: "Estrutura de dados bidimensional" },
-  { word: "LISTA", hint: "Sequencia ordenada de itens", concept: "Colecao ordenada de elementos" },
-  { word: "GRAFICO", hint: "Representacao visual de dados", concept: "Ilustracao visual que representa informacoes" },
-  { word: "PYTHON", hint: "Linguagem de programacao com nome de animal", concept: "Linguagem de programacao versatil e popular" },
-  { word: "JAVA", hint: "Linguagem de programacao que usa xicara de cafe", concept: "Linguagem de programacao multiplataforma" },
-  { word: "HTML", hint: "Linguagem de marcacao para criar paginas web", concept: "Linguagem de marcacao para estruturar conteudo web" },
-  { word: "CSS", hint: "Linguagem que deixa bonito o site", concept: "Linguagem de estilo para design de paginas web" },
-  { word: "JAVASCRIPT", hint: "Linguagem que faz sites interativos", concept: "Linguagem de programacao para web" },
-  { word: "SQL", hint: "Linguagem para consultar bancos de dados", concept: "Linguagem de consulta para gerenciar dados" },
-  { word: "COMPILADOR", hint: "Traduz codigo para linguagem de maquina", concept: "Programa que converte codigo-fonte em executavel" },
-  { word: "VIRUS", hint: "Programa malicioso que danifica o computador", concept: "Software projetado para causar danos ao sistema" },
-  { word: "FIREWALL", hint: "Protecao contra ataques pela internet", concept: "Sistema de seguranca que filtra trafego de rede" },
-  { word: "ALGORITMO", hint: "Sequencia de passos para resolver um problema", concept: "Conjunto ordenado de instrucoes para executar uma tarefa" },
-  { word: "VARIÁVEL", hint: "Espaco na memoria que guarda um valor", concept: "Espaco reservado na memoria para armazenar dados" },
-  { word: "LOOP", hint: "Repeticao de um bloco de codigo", concept: "Estrutura de controle que repete instrucoes" },
-  { word: "ARRAY", hint: "Vetor que guarda varios valores", concept: "Estrutura de dados que armazena elementos do mesmo tipo" },
-  { word: "STRING", hint: "Sequencia de caracteres (texto)", concept: "Tipo de dado que representa texto" },
-  { word: "INTEGER", hint: "Numero inteiro", concept: "Tipo numerico para valores inteiros" },
-  { word: "BOOLEAN", hint: "Verdadeiro ou Falso", concept: "Tipo logico com dois valores possiveis" },
-  { word: "OBJECT", hint: "Instancia de uma classe", concept: "Estrutura que agrupa dados e comportamentos" },
-  { word: "CLASS", hint: "Molde para criar objetos", concept: "Modelo que define propriedades e metodos" },
-  { word: "FUNCTION", hint: "Bloco de codigo reutilizavel", concept: "Bloco de codigo que executa uma tarefa especifica" },
-  { word: "DEPLOY", hint: "Publicar uma aplicacao no ar", concept: "Processo de colocar uma aplicacao em producao" },
-  { word: "BACKUP", hint: "Copia de seguranca dos dados", concept: "Copia de seguranca para prevenir perdas" },
-  { word: "FRAMEWORK", hint: "Estrutura que facilita o desenvolvimento", concept: "Conjunto de ferramentas que acelera criacao de software" },
-  { word: "TERMINAL", hint: "Linha de comando para o computador", concept: "Interface de texto para interagir com o sistema" },
-  { word: "BROWSER", hint: "Outro nome para navegador web", concept: "Software para acessar paginas da internet" },
-  { word: "SERVER", hint: "Computador que hospeda sites e servicos", concept: "Maquina que fornece servicos em rede" },
-  { word: "ROUTER", hint: "Dispositivo que distribui internet na casa", concept: "Equipamento que direciona pacotes de dados em rede" },
-  { word: "MODEM", hint: "Caixa que recebe o sinal de internet", concept: "Modulador-demodulador para conexao de rede" },
+  {
+    word: "BIT",
+    hints: [
+      "É a menor unidade de informação em computação",
+      "Só pode ter dois valores: 0 ou 1",
+      "O nome vem do inglês 'binary digit' (dígito binário)"
+    ],
+    lesson: "O BIT é o átomo da informação digital. Tudo o que o computador processa — texto, imagens, vídeos, som — é representado internamente como uma sequência enorme de bits (0s e 1s). Um bit sozinho é limitado, mas bilhões de bits trabalham juntos para formar dados complexos. Por exemplo, a letra 'A' é representada pelo código 01000001 (8 bits = 1 byte). O sistema binário (base 2) é a linguagem fundamental dos computadores porque os circuitos eletrônicos podem representar facilmente dois estados: ligado (1) e desligado (0)."
+  },
+  {
+    word: "BYTE",
+    hints: [
+      "É uma unidade de dados formada por 8 bits",
+      "Representa um caractere (letra, número ou símbolo)",
+      "1 kilobyte (KB) = 1.024 bytes"
+    ],
+    lesson: "O BYTE é a unidade básica de medida de dados em computação. Um byte contém exatamente 8 bits e pode representar 256 valores diferentes (de 00000000 a 11111111 em binário). Um byte é suficiente para armazenar um caractere ASCII, como a letra 'A' (65 em decimal, 01000001 em binário). Para referência: 1 KB ≈ 1 página de texto, 1 MB ≈ 1 foto, 1 GB ≈ 1 hora de vídeo. Compreender bytes é essencial para entender capacidade de armazenamento e consumo de memória."
+  },
+  {
+    word: "CPU",
+    hints: [
+      "É chamada de 'cérebro' do computador",
+      "Executa instruções e processa dados",
+      "A sigla significa Unidade Central de Processamento"
+    ],
+    lesson: "A CPU (Central Processing Unit) é o componente responsável por executar todas as instruções de um computador. Ela realiza operações aritméticas, lógicas e de controle que fazem o sistema funcionar. Uma CPU moderna bilhões de transistores e pode executar bilhões de instruções por segundo (medidas em GHz). Ela contém a ULA (Unidade Lógica Aritmética) para cálculos, a UC (Unidade de Controle) para coordenar operações e registradores para dados temporários. O desempenho da CPU afeta diretamente a velocidade do computador."
+  },
+  {
+    word: "MEMORIA",
+    hints: [
+      "Armazena dados temporariamente para acesso rápido",
+      "Os dados somem quando o computador é desligado",
+      "É diferente do armazenamento permanente (disco)"
+    ],
+    lesson: "A memória RAM (Random Access Memory) é o 'espaço de trabalho' do computador. Ela guarda temporariamente os dados e programas que estão sendo usados no momento. Quando você abre um programa, ele é carregado da memória permanente (disco) para a RAM, que é muito mais rápida. A RAM é volátil: todos os dados são perdidos quando o computador é desligado. Quanta mais RAM um computador tem, mais programas pode executar simultaneamente sem lentidão. Uma memória DDR4 típica tem velocidades de transferência de 2.400 a 3.200 MHz."
+  },
+  {
+    word: "HARDWARE",
+    hints: [
+      "São as partes físicas que você pode tocar",
+      "Inclui peças como processador, memória e tela",
+      "É o oposto de software"
+    ],
+    lesson: "HARDWARE é todo componente físico de um computador — tudo o que você pode ver e tocar. Isso inclui a placa-mãe, processador, memória RAM, disco rígido, monitor, teclado, mouse e cabos. O hardware pode ser dividido em categorias: unidades de entrada (teclado, mouse), processamento (CPU), armazenamento (HD, SSD) e saída (monitor, impressora). O hardware precisa de software (programas) para funcionar, e vice-versa — juntos formam o sistema computacional completo."
+  },
+  {
+    word: "SOFTWARE",
+    hints: [
+      "São os programas e aplicativos que rodam no computador",
+      "Não é possível tocar — é apenas código",
+      "Pode ser dividido em sistema e aplicativo"
+    ],
+    lesson: "SOFTWARE é o conjunto de programais, dados e instruções que fazem o hardware funcionar. Diferente do hardware, o software é intangível — não pode ser tocado. Ele se divide em duas categorias principais: Software de Sistema (como Windows, Linux, que gerenciam o hardware) e Software Aplicativo (como navegador, editor de texto, games). Todo software é escrito em linguagens de programação por desenvolvedores. Sem software, o hardware seria apenas metal e plástico sem utilidade."
+  },
+  {
+    word: "SISTEMA",
+    hints: [
+      "Conjunto de componentes que trabalham juntos",
+      "No contexto de computação, gerencia hardware e software",
+      "Pode ser operacional, nervoso, solar, etc."
+    ],
+    lesson: "Em computação, um SISTEMA é um conjunto integrado de componentes que funcionam como um todo para atingir um objetivo. O mais conhecido é o Sistema Operacional (SO), que gerencia os recursos do hardware e fornece serviços para os programas. Exemplos: Windows, Linux, macOS. O SO controla memória, processos, dispositivos de entrada/saída e segurança. Fora da computação, o conceito de sistema é fundamental em diversas áreas: sistemas nervosos, solares, educacionais — todos seguem a mesma lógica de partes interdependentes."
+  },
+  {
+    word: "REDE",
+    hints: [
+      "Conjunto de computadores conectados entre si",
+      "Permite compartilhar dados e recursos",
+      "Pode ser local (LAN) ou mundial (Internet)"
+    ],
+    lesson: "Uma REDE de computadores é um conjunto de dispositivos interligados que trocam dados e compartilham recursos. Existem diferentes tipos: LAN (Local Area Network) conecta dispositivos em um prédio; WAN (Wide Area Network) conecta redes em grandes distâncias; a Internet é a maior WAN do mundo. As redes usam protocolos (regras de comunicação) como TCP/IP para garantir que os dados cheguem corretamente. Redes revolucionaram a humanidade ao permitir comunicação instantânea global e acesso a informações."
+  },
+  {
+    word: "INTERNET",
+    hints: [
+      "Rede mundial que conecta bilhões de dispositivos",
+      "Permite acessar sites, e-mails e serviços online",
+      "Foi criada a partir de projetos militares nos EUA"
+    ],
+    lesson: "A INTERNET é a maior rede de computadores do mundo, conectando bilhões de dispositivos em praticamente todos os países. Ela surgiu nos anos 1960 como projeto militar (ARPANET) e se tornou pública nos anos 1990. A Internet funciona com base no protocolo TCP/IP, que divide dados em pacotes e os transmite por diferentes rotas até o destino. Ela dá acesso a serviços como World Wide Web (sites), e-mail, streaming, redes sociais e comércio eletronic. A Internet transformou profundamente a sociedade, a comunicação e a economia global."
+  },
+  {
+    word: "NAVEGADOR",
+    hints: [
+      "Programa usado para acessar sites na internet",
+      "Exemplos: Chrome, Firefox, Safari, Edge",
+      "A sigla WWW significa World Wide Web"
+    ],
+    lesson: "O NAVEGADOR (browser) é o software que permite acessar e visualizar páginas da World Wide Web. Ele interpreta linguagens como HTML, CSS e JavaScript para renderizar sites visuais. Os navegadores mais populares são Google Chrome, Mozilla Firefox, Safari (Apple) e Microsoft Edge. Um navegador envia requisições a servidores web, recebe dados e os exibia como páginas gráficas com textos, imagens e vídeos. Desde os anos 1990, o navegador é a principal porta de entrada das pessoas para a Internet."
+  },
+  {
+    word: "PROGRAMA",
+    hints: [
+      "Sequência de instruções que o computador executa",
+      "É escrito em linguagem de programação",
+      "Exemplos: Word, Photoshop, games"
+    ],
+    lesson: "Um PROGRAMA é um conjunto de instruções escritas em linguagem de programação que o computador executa para realizar tarefas específicas. Programas são desenvolvidos por programadores usando linguagens como Python, Java, C++ ou JavaScript. Antes de ser executado, o código-fonte (legível por humanos) pode ser compilado ou interpretado em linguagem de máquina (binário). Programas variam desde simples (calculadora) até complexos (sistema operacional, inteligência artificial). Eles são a essência do que torna o computador útil."
+  },
+  {
+    word: "ALGORITMO",
+    hints: [
+      "Sequência ordenada de passos para resolver um problema",
+      "É um conceito fundamental da computação e da lógica",
+      "Pode ser escrito em pseudocódigo ou fluxograma"
+    ],
+    lesson: "Um ALGORITMO é um conjunto finito e ordenado de instruções que, quando executadas, resolvem um problema ou realizam uma tarefa. É um dos conceitos mais fundamentais da ciência da computação. Algoritmos existem desde a antiguidade (algoritmo de Euclides para MDC), mas ganharam enorme relevância com os computadores. Um bom algoritmo deve ser: preciso (sempre corrige), finito (termina em algum momento) e eficiente (usa poucos recursos). Exemplo cotidiano: uma receita de bolo é um algoritmo — uma sequência de passos para produzir um resultado."
+  },
+  {
+    word: "VARIÁVEL",
+    hints: [
+      "Espaço na memória que guarda um valor",
+      "Pode armazenar números, textos ou outros dados",
+      "Nome fundamental na programação"
+    ],
+    lesson: "Uma VARIÁVEL é um 'recipiente' nomeado na memória do computador que armazena um valor que pode ser alterado durante a execução de um programa. Por exemplo: idade = 25 (variável inteira), nome = 'Ana' (variável string). Cada variável tem um tipo (inteiro, real, texto, lógico) que determina que tipo de dado pode armazenar. Na programação, variáveis são essenciais — sem elas, não seria possível armazenar dados temporários, contar repetições ou processar informações do usuário."
+  },
+  {
+    word: "SENHA",
+    hints: [
+      "Serve para proteger contas e acessos",
+      "Deve ser secreta e difícil de adivinhar",
+      "Nunca deve ser compartilhada com outras pessoas"
+    ],
+    lesson: "Uma SENHA (password) é uma sequência de caracteres usada para autenticar um usuário em um sistema. Ela é a primeira linha de defesa na segurança da informação. Uma senha forte deve ter: pelo menos 8 caracteres, combinação de letras maiúsculas/minúsculas, números e símbolos especiais. Nunca deve ser repetida entre diferentes serviços. A segurança cibernética começa com boas práticas de senhas — elas protegem desde contas de e-mail até sistemas bancários."
+  },
+  {
+    word: "ARQUIVO",
+    hints: [
+      "Conjunto de dados armazenados no computador",
+      "Pode ser documento, imagem, vídeo ou programa",
+      "Possui um nome e uma extensão (.txt, .jpg, .pdf)"
+    ],
+    lesson: "Um ARQUIVO é a unidade básica de armazenamento de dados em um computador. Todo arquivo tem um nome (identificação), uma extensão (que indica o tipo) e um conteúdo (os dados). Por exemplo: relatorio.pdf (documento), foto.jpg (imagem), musica.mp3 (áudio). Os arquivos são organizados em pastas (diretórios) para facilitar a localização. Entender arquivos é fundamental: eles são como 'caixas' onde guardamos informações digitais, e são o que você salva, copia e envia quando usa o computador."
+  },
+  {
+    word: "PASTA",
+    hints: [
+      "Serve para organizar arquivos no computador",
+      "Pode conter outras pastas dentro dela",
+      "Também é chamada de diretório"
+    ],
+    lesson: "Uma PASTA (ou diretório) é uma estrutura de organização que agrupa arquivos e outras pastas no sistema de arquivos do computador. Funciona como uma árvore hierárquica: a pasta raiz (C:\\ no Windows, / no Linux) contém subpastas, que contêm mais subpastas e arquivos. A organização em pastas é essencial para manter o computador organizado — imagine tentar encontrar um arquivo entre milhões sem essa estrutura! Sistemas operacionais usam caminhos (paths) como C:\\Documentos\\Trabalho para localizar arquivos."
+  },
+  {
+    word: "DOWNLOAD",
+    hints: [
+      "Baixar dados de um servidor para o seu dispositivo",
+      "É o processo oposto ao upload",
+      "Significa receber informações pela internet"
+    ],
+    lesson: "DOWNLOAD é o processo de transferir dados de um servidor (computador remoto) para o seu dispositivo local (computador, celular, tablet) pela internet. Quando você assiste um vídeo no YouTube, baixa um app ou recebe um e-mail, está fazendo download. A velocidade do download é medida em Mbps (megabits por segundo) e depende da sua conexão com a internet. O termo 'download' vem do inglês: 'down' (para baixo) + 'load' (carregar) — carregar dados para baixo, ou seja, para o seu dispositivo."
+  },
+  {
+    word: "UPLOAD",
+    hints: [
+      "Enviar dados do seu dispositivo para a internet",
+      "É o processo oposto ao download",
+      "Usado para compartilhar arquivos, fotos ou vídeos"
+    ],
+    lesson: "UPLOAD é o processo de transferir dados do seu dispositivo local para um servidor na internet. Exemplos: enviar um e-mail com anexo, postar uma foto no Instagram, fazer backup de arquivos na nuvem. A velocidade de upload geralmente é menor que a de download nas conexões domésticas (conexão assimétrica). O upload é essencial para a interatividade da Internet — sem ele, só poderíamos consumir conteúdo, mas não criar ou compartilhar."
+  },
+  {
+    word: "EMAIL",
+    hints: [
+      "Correio eletrônico para enviar mensagens digitais",
+      "Precisa de um endereço (usuario@provedor.com)",
+      "Inventado nos anos 1970, é um dos serviços mais antigos da Internet"
+    ],
+    lesson: "EMAIL (electronic mail / correio eletrônico) é um dos serviços mais antigos e importantes da Internet, criado nos anos 1970. Funciona como uma carta digital: você envia uma mensagem de um endereço (ex: ana@gmail.com) para outro endereço. O e-mail usa protocolos como SMTP (para envio) e POP3/IMAP (para recebimento). Ele revolucionou a comunicação ao permitir troca de mensagens instantânea, gratuita e global — substituindo parcialmente o correio tradicional."
+  },
+  {
+    word: "CELULAR",
+    hints: [
+      "Telefone inteligente com acesso à internet",
+      "Funciona como um mini computador de bolso",
+      "Possui tela sensível ao toque (touchscreen)"
+    ],
+    lesson: "O CELULAR (smartphone) é um dispositivo móvel que combina telefone, computador, câmera e conectividade em um único aparelho. Criado nos anos 1990, revolucionou-se com o iPhone (2007) e Android para se tornar o dispositivo mais usado do mundo. Um smartphone moderno tem processador, memória, sensores, GPS e acesso à internet. Ele transformou a sociedade: permite acesso a informações, comunicação, serviços bancários, entretenimento e trabalho de qualquer lugar."
+  },
+  {
+    word: "WIFI",
+    hints: [
+      "Tecnologia de conexão sem fio para internet",
+      "Permite conectar dispositivos à rede local sem cabos",
+      "Usa ondas de rádio para transmitir dados"
+    ],
+    lesson: "WIFI é uma tecnologia de rede sem fio que permite conectar dispositivos à internet e entre si, usando ondas de rádio (frequências de 2.4 GHz e 5 GHz). Criada nos anos 1990, tornou-se indispensável: permite conexão de smartphones, notebooks, smart TVs e dispositivos IoT sem necessidade de cabos. O alcance típico é de 30-50 metros em ambientes fechados. O WiFi é baseado no padrão IEEE 802.11 e é essencial para a mobilidade e conveniência na era digital."
+  },
+  {
+    word: "BLUETOOTH",
+    hints: [
+      "Conexão sem fio de curta distância",
+      "Usado para conectar fones, teclados e mouses",
+      "Foi inventado por engenheiros da Ericsson nos anos 1990"
+    ],
+    lesson: "BLUETOOTH é uma tecnologia de comunicação sem fio de curta distância (até 100 metros) que permite trocar dados entre dispositivos. Criada pela Ericsson em 1994 e nomeada em homenagem ao rei viking Harald Bluetooth. É usado para conectar fones de ouvido, teclados, mouses, relógios inteligentes e carros. Funciona na faixa de 2.4 GHz e consome pouca energia (especialmente na versão BLE - Bluetooth Low Energy). É ideal para conexões pessoais onde não se precisa de alta velocidade."
+  },
+  {
+    word: "MONITOR",
+    hints: [
+      "É a tela onde você visualiza tudo do computador",
+      "É um dispositivo de saída de imagens",
+      "Pode ser LCD, LED ou OLED"
+    ],
+    lesson: "O MONITOR é o dispositivo de saída principal de um computador — é onde você vê todas as informações visuais. Ele exibe imagens, textos e vídeos gerados pela placa de vídeo. Os modernos usam tecnologias LCD, LED ou OLED, com resoluções como Full HD (1920x1080) ou 4K (3840x2160). O monitor é composto por milhões de PIXELS (pontos luminosos) que formam a imagem. A qualidade do monitor afeta diretamente a experiência do usuário — resolução, taxa de atualização (Hz) e cores são fatores importantes."
+  },
+  {
+    word: "TECLADO",
+    hints: [
+      "Dispositivo com letras e números para digitar",
+      "É o principal dispositivo de entrada de texto",
+      "Pode ser mecânico, de membrana ou virtual"
+    ],
+    lesson: "O TECLADO é o principal dispositivo de entrada de texto em um computador. Ele converte toques físicos em sinais elétricos que o computador interpreta como caracteres. O layout QWERTY (padrão) foi projetado no século XIX para máquinas de escrever. Teclados mecânicos usam interruptores físicos (switches) sob cada tecla, oferecendo maior durabilidade e resposta tátil. Teclados de membrana são mais baratos e silenciosos. Além de letras, possuem teclas especiais (Ctrl, Alt, Shift) que permitem atalhos e comandos."
+  },
+  {
+    word: "MOUSE",
+    hints: [
+      "Dispositivo que controla o cursor na tela",
+      "Pode ser óptico, a laser ou trackball",
+      "Foi inventado por Douglas Engelbart em 1964"
+    ],
+    lesson: "O MOUSE é um dispositivo de entrada apontador que controla o cursor (ponteiro) na tela do computador. Inventado por Douglas Engelbart em 1964 (originalmente de madeira!), revolucionou a interação homem-máquina. Mouse óptico usa uma câmera miniatura que detecta movimentos na superfície; mouse a laser é mais preciso. Botões e roda permitem clique, duplo clique, arrastar e rolar. O mouse transformou a computação ao tornar a interação visual intuitiva — foi essencial para a popularização dos computadores pessoais."
+  },
+  {
+    word: "IMPRESSORA",
+    hints: [
+      "Dispositivo que coloca documentos em papel",
+      "Pode ser a jato de tinta ou laser",
+      "É um dispositivo de saída"
+    ],
+    lesson: "A IMPRESSORA é um dispositivo de saída que reproduz conteúdo digital em papel físico. Existem duas tecnologias principais: jato de tinta (usa cápsulas de tinta, boa para fotos e cores) e laser (usa toner, ideal para documentos em grande volume). Impressoras 3D, mais recentes, criam objetos tridimensionais camada por camada. Apesar da digitalização, impressoras continuam importantes em escritórios, escolas e hogares — ela são a ponte entre o mundo digital e o físico."
+  },
+  {
+    word: "CABO",
+    hints: [
+      "Fio que liga dispositivos entre si",
+      "Transmite dados ou energia elétrica",
+      "Tipos comuns: USB, HDMI, cabo de rede"
+    ],
+    lesson: "CABOS são os elos físicos que conectam dispositivos eletrônicos, permitindo transmissão de dados e/ou energia elétrica. Cada tipo de cabo tem função específica: USB (conecta periféricos e transfere dados), HDMI (transmite vídeo e áudio em alta definição), cabo de rede Ethernet (conecta dispositivos à rede local), cabo de alimentação (fornece energia). Apesar do avanço do wireless, cabos ainda são essenciais por oferecerem velocidade, estabilidade e segurança superiores."
+  },
+  {
+    word: "PIXEL",
+    hints: [
+      "É o menor elemento que forma uma imagem digital",
+      "A tela do computador é composta por milhões de pixels",
+      "Cada pixel pode ter milhões de cores diferentes"
+    ],
+    lesson: "O PIXEL (picture element) é a menor unidade de uma imagem digital. Uma tela de smartphone pode ter mais de 2 milhões de pixels; um monitor 4K tem mais de 8 milhões. Cada pixel armazena informações de cor (geralmente nos modelos RGB: vermelho, verde, azul). Quanto mais pixels, maior a resolução e nitidez da imagem. A densidade de pixels (PPI - pixels per inch) determina a qualidade visual: uma tela Retina da Apple tem ~326 PPI, tornando os pixels invisíveis a olho nu."
+  },
+  {
+    word: "MEMORIA",
+    hints: [
+      "Armazena dados temporariamente para acesso rápido",
+      "Quando o computador desliga, os dados somem",
+      "É diferente do armazenamento permanente (disco)"
+    ],
+    lesson: "A memória RAM (Random Access Memory) é o 'espaço de trabalho' do computador. Ela guarda temporariamente os dados e programas que estão sendo usados no momento. Quando você abre um programa, ele é carregado da memória permanente (disco) para a RAM, que é muito mais rápida. A RAM é volátil: todos os dados são perdidos quando o computador é desligado. Quanta mais RAM um computador tem, mais programas pode executar simultaneamente sem lentidão."
+  },
+  {
+    word: "DADOS",
+    hints: [
+      "Informações brutas armazenadas no computador",
+      "Podem ser textos, números, imagens ou sons",
+      "São processados para se tornar informações úteis"
+    ],
+    lesson: "DADOS são informações brutas (números, textos, imagens, sons) que o computador armazena e processa. Diferente de informações, dados brutos sozinhos não têm significado claro — precisam ser organizados e analisados. Por exemplo, a sequência '42, 17, 35' são dados; 'notas da prova: 42, 17, 35' já começa a ter contexto. A ciência de dados (Data Science) estuda como extrair informações valiosas de grandes volumes de dados. No mundo digital, dados são considerados o 'petróleo do século XXI'."
+  },
+  {
+    word: "LINK",
+    hints: [
+      "Endereço clicável para acessar um recurso na web",
+      "Começa com http:// ou https://",
+      "A sigla URL significa Uniform Resource Locator"
+    ],
+    lesson: "Um LINK (ou URL - Uniform Resource Locator) é um endereço eletrônico que aponta para um recurso na internet: página web, arquivo, imagem ou vídeo. Formato típico: https://exemplo.com/pagina. O 'https://' indica protocolo seguro (criptografado). Links são a base da navegação web — ao clicar em um link, o navegador envia uma requisição ao servidor que hospeda o recurso e exibe o conteúdo. A World Wide Web é essencialmente uma coleção enorme de links interconectados."
+  },
+  {
+    word: "BUG",
+    hints: [
+      "Erro ou falha no código de um programa",
+      "Pode fazer o programa travar ou funcionar errado",
+      "O nome surgiu quando encontraram um inseto real no computador"
+    ],
+    lesson: "Um BUG é um erro no código de um programa que causa comportamento inesperado — pode fazer o software travar, mostrar resultados errados ou funcionar de forma imprevisível. O termo surgiu nos anos 1940 quando Grace Hopper encontrou um inseto (bug) preso em um relé do computador Harvard Mark II. Todo programador já enfrentou bugs — eles são inevitáveis no desenvolvimento de software. A depuração (debug) é a arte de encontrar e corrigir esses erros, uma habilidade essencial para qualquer desenvolvedor."
+  },
+  {
+    word: "FIREWALL",
+    hints: [
+      "Sistema de segurança que filtra o tráfego de rede",
+      "Protege contra acessos não autorizados",
+      "Funciona como um 'portão' entre sua rede e a internet"
+    ],
+    lesson: "Um FIREWALL é um sistema de segurança da informação que monitora e controla o tráfego de rede entrando e saindo, baseando-se em regras de segurança. Funciona como um portão inteligente: bloqueia acessos não autorizados enquanto permite comunicações legítimas. Existem firewalls de hardware (dispositivo físico) e de software (programa instalado). Todo sistema operacional moderno inclui um firewall. Ele é a primeira linha de defesa contra ataques pela internet, protegendo dados e privacidade."
+  },
+  {
+    word: "VIRUS",
+    hints: [
+      "Programa malicioso que danifica o computador",
+      "Pode se espalhar para outros computadores",
+      "Antivírus é o programa que protege contra ele"
+    ],
+    lesson: "Um VÍRUS de computador é um software malicioso projetado para se replicar e causar danos. Diferente de vírus biológicos, um vírus de computador precisa de um 'hospedeiro' (programa ou arquivo) para se espalhar. Pode apagar arquivos, roubar dados ou danificar o sistema. O primeiro vírus de computador foi criado nos anos 1980 ( Elk Cloner). Programas antivírus monitoram o sistema e bloqueiam ameaças. Práticas de segurança como manter o sistema atualizado e não abrir anexos suspeitos são essenciais para prevenir infecções."
+  },
+  {
+    word: "BACKUP",
+    hints: [
+      "Cópia de segurança dos seus dados",
+      "Protege contra perdas por falhas ou acidentes",
+      "Deve ser feito regularmente para ser eficaz"
+    ],
+    lesson: "BACKUP é uma cópia de segurança dos dados, feita para restaurar o original em caso de perda, dano ou exclusão acidental. É uma das práticas mais importantes de segurança da informação. Existem diferentes tipos: backup completo (copia tudo), incremental (copia só o que mudou) e diferencial (copia mudanças desde o último completo). Locais comuns: disco externo, nuvem (Google Drive, OneDrive), fita magnética. A regra 3-2-1 recomenda: 3 cópias, em 2 mídias diferentes, com 1 fora do local. Sem backup, dados podem ser perdidos para sempre."
+  },
+  {
+    word: "LINUX",
+    hints: [
+      "Sistema operacional gratuito e de código aberto",
+      "Foi criado por Linus Torvalds em 1991",
+      "É usado em servidores, supercomputadores e celulares (Android)"
+    ],
+    lesson: "LINUX é um sistema operacional de código aberto (open source) criado por Linus Torvalds em 1991, quando era estudante na Finlândia. Diferente do Windows, qualquer pessoa pode baixar, modificar e redistribuir o código-fonte. Existem centenas de distribuições (distros): Ubuntu (popular), Fedora, Debian, Arch. Linux domina servidores (roda a maioria dos sites da internet), supercomputadores (100% dos top 500) e celulares (Android é baseado em Linux). Sua filosofia é baseada em liberdade, colaboração e transparência."
+  },
+  {
+    word: "WINDOWS",
+    hints: [
+      "Sistema operacional mais usado em desktops no mundo",
+      "Foi desenvolvido pela Microsoft",
+      "Versões conhecidas: XP, 7, 10, 11"
+    ],
+    lesson: "WINDOWS é o sistema operacional mais popular para computadores pessoais, desenvolvido pela Microsoft desde 1985. Ele usa interface gráfica (GUI) com ícones, janelas e menus — revolucionando a facilidade de uso de computadores. O Windows é proprietário (código fechado, pago). Suas versões mais marcantes: Windows 95 (popularizou o menu Iniciar), XP (estabilidade), 7 (polido), 10/11 (atual). Cerca de 74% dos desktops do mundo rodam Windows. Ele suporta milhões de programas e é a plataforma dominante para jogos e softwares corporativos."
+  },
+  {
+    word: "SERVIDOR",
+    hints: [
+      "Computador que fornece serviços para outros dispositivos",
+      "Armazena sites, e-mails e dados na internet",
+      "Pode ser físico (caixa) ou virtual (nuvem)"
+    ],
+    lesson: "Um SERVIDOR (server) é um computador configurado para fornecer serviços, dados ou recursos para outros computadores (clientes) em uma rede. Diferente de um PC comum, um servidor roda 24/7 e é projetado para alta disponibilidade. Exemplos: servidor web (hosting de sites), servidor de e-mail, servidor de banco de dados. Pode ser um equipamento físico em data center ou uma instância virtual na nuvem (AWS, Azure). Servidores são a espinha dorsal da Internet — sem eles, não existiriam sites, redes sociais ou serviços online."
+  },
+  {
+    word: "ROUTER",
+    hints: [
+      "Equipamento que distribui internet em uma rede",
+      "Direciona dados para o dispositivo correto",
+      "É essencial para conexões em casa e empresas"
+    ],
+    lesson: "O ROUTER (roteador) é um equipamento de rede que direciona pacotes de dados entre diferentes redes ou dispositivos. Em casa, o router conecta seus dispositivos (computador, celular, TV) à rede local e à internet. Ele funciona como um 'carteiro digital': analisa o endereço de destino de cada pacote e o encaminha pelo caminho correto. Roteadores domésticos geralmente combinam funções de roteador, switch e ponto de acesso WiFi. Em empresas, roteadores gerenciam tráfego intenso e garantem que dados cheguem aos destinos corretos."
+  },
+  {
+    word: "FRAMEWORK",
+    hints: [
+      "Estrutura que facilita e acelera o desenvolvimento",
+      "Oferece código pré-pronto para resolver problemas comuns",
+      "Exemplos: React, Django, Laravel, Bootstrap"
+    ],
+    lesson: "Um FRAMEWORK é um conjunto organizado de código, ferramentas e convenções que facilita o desenvolvimento de software. Em vez de começar do zero, o programador usa o framework como base e adiciona suas funcionalidades específicas. É como construir uma casa usando peças pré-fabricadas em vez de fabricar cada tijolo. Frameworks promovem boas práticas, reduzem erros e aceleram o desenvolvimento. Exemplos: React (web frontend), Django (web backend Python), Laravel (PHP), Bootstrap (design responsivo)."
+  },
+  {
+    word: "DEPLOY",
+    hints: [
+      "Processo de colocar uma aplicação 'no ar'",
+      "Publicar o programa para que os usuários possam usar",
+      "É a etapa final do desenvolvimento de software"
+    ],
+    lesson: "DEPLOY é o processo de colocar uma aplicação de software em produção — ou seja, disponibilizá-la para uso real dos usuários. Antes do deploy, o código fica em ambiente de desenvolvimento/teste; depois, vai para o servidor onde as pessoas acessam. O deploy inclui: transferir código, configurar banco de dados, testes finais e monitoramento. Ferramentas como Docker, Kubernetes e pipelines de CI/CD automatizam o processo. Um deploy mal feito pode causar indisponibilidade — por isso, é uma das etapas mais críticas na engenharia de software."
+  },
+  {
+    word: "DEBUG",
+    hints: [
+      "Processo de encontrar e corrigir erros no código",
+      "É essencial para garantir que o programa funcione",
+      "A palavra vem de 'bug' (erro) + 'debug' (depurar)"
+    ],
+    lesson: "DEBUG (depuração) é o processo de identificar, localizar e corrigir erros (bugs) no código de um programa. É uma das atividades mais importantes e frequentes no desenvolvimento de software — programadores gastam em média 50% do tempo depurando. Ferramentas de debug permitem executar o programa passo a passo, inspecionar variáveis, testar condições e rastrear erros. A depuração requer lógica, paciência e atenção aos detalhes — é uma habilidade que se aprimora com a prática."
+  },
+  {
+    word: "COMPILADOR",
+    hints: [
+      "Traduz código de programação para linguagem de máquina",
+      "Transforma código legível em programa executável",
+      "Linguagens como C e Java usam compiladores"
+    ],
+    lesson: "O COMPILADOR é um programa que traduz código-fonte escrito em linguagem de programação (como C, C++, Java) para linguagem de máquina (binário/0s e 1s) que o processador entende diretamente. É como traduzir um livro de português para chinês — o conteúdo é o mesmo, mas a 'linguagem' muda. Existem também interpretadores (como Python), que executam código linha a linha sem compilar tudo antes. Compiladores otimizam o código para melhor desempenho e detectam erros de sintaxe antes da execução."
+  },
+  {
+    word: "KERNEL",
+    hints: [
+      "É o núcleo do sistema operacional",
+      "Gerencia recursos como CPU, memória e dispositivos",
+      "Todo sistema operacional tem um kernel"
+    ],
+    lesson: "O KERNEL é a parte central e mais importante de um sistema operacional. Ele funciona como um 'gerente' que controla todos os recursos do hardware: processador, memória, dispositivos de entrada/saída. Todo programa que quer usar o hardware precisa passar pelo kernel. Existem diferentes tipos: monolítico (Linux, onde tudo roda em modo kernel), microsservidor (MINIX, com partes isoladas) e híbrido (Windows). O kernel é o primeiro programa a ser carregado quando o computador liga e permanece rodando até desligar."
+  },
+  {
+    word: "ANDROID",
+    hints: [
+      "Sistema operacional de celulares da Google",
+      "É open source (código aberto)",
+      "Usado pela maioria dos smartphones do mundo"
+    ],
+    lesson: "ANDROID é um sistema operacional mobile desenvolvido pelo Google, baseado no kernel Linux. Lançado em 2008, tornou-se o SO mais usado do mundo em smartphones (cerca de 72% do mercado global). Android é open source, permitindo que fabricantes (Samsung, Xiaomi, Motorola) personalize o sistema para seus dispositivos. Sua loja de aplicativos (Google Play) tem milhões de apps. Android popularizou smartphones acessíveis e é responsável pela conectividade de bilhões de pessoas em países em desenvolvimento."
+  },
+  {
+    word: "CACHE",
+    hints: [
+      "Memória temporária de alta velocidade",
+      "Guarda dados que são acessados frequentemente",
+      "Reduz o tempo de acesso a informações"
+    ],
+    lesson: "CACHE é uma memória temporária extremamente rápida que armazena dados que são acessados frequentemente, evitando que o processador precise buscá-los na memória principal (mais lenta). Funciona como um 'atalho' inteligente: se o dado está no cache, é acessado em nanossegundos; se não está, vai até a memória principal (microssegundos). Todo processador moderno tem vários níveis de cache (L1, L2, L3) — quanto menor e mais próximo da CPU, mais rápido. A cache é essencial para o desempenho em computação."
+  },
+  {
+    word: "PIX",
+    hints: [
+      "Sistema de pagamento instantâneo brasileiro",
+      "Foi criado pelo Banco Central do Brasil",
+      "Funciona 24 horas por dia, 7 dias por semana"
+    ],
+    lesson: "O PIX é um sistema de pagamento eletrônico instantâneo criado pelo Banco Central do Brasil em novembro de 2020. Permite transferências bancárias em segundos, a qualquer hora, inclusive feriados e finais de semana. Funciona com chaves (CPF, e-mail, celular ou chave aleatória). Revolucionou o financeiro brasileiro ao eliminar a demora das transferências tradicionais e criar uma alternativa gratuita e democrática ao dinheiro. Em menos de 2 anos, o PIX foi adotado por mais de 100 milhões de brasileiros."
+  },
+  {
+    word: "TABELA",
+    hints: [
+      "Organização de dados em linhas e colunas",
+      "Usada em planilhas e bancos de dados",
+      "Cada linha é um registro, cada coluna é um campo"
+    ],
+    lesson: "Uma TABELA é uma estrutura de dados que organiza informações em linhas (registros) e colunas (campos/atributos). É fundamental em banco de dados, planilhas e apresentações. Por exemplo, uma tabela de alunos pode ter colunas: Nome, Matrícula, Nota. Cada linha seria um aluno diferente. Tabelas permitem organizar, consultar e analisar dados de forma estruturada. Em bancos de dados relacionais (SQL), tabelas são conectadas por chaves para criar relações complexas."
+  },
+  {
+    word: "LISTA",
+    hints: [
+      "Sequência ordenada de elementos",
+      "Cada elemento pode ser acessado por sua posição",
+      "É uma estrutura de dados fundamental na programação"
+    ],
+    lesson: "Uma LISTA é uma estrutura de dados que armazena uma sequência de elementos, mantendo a ordem. Diferente de um array (tamanho fixo), listas podem crescer ou diminuir dinamicamente. Cada elemento tem uma posição (índice) que permite acesso direto. Na programação, listas são usadas constantemente: lista de compras, lista de contatos, lista de tarefas. Linguagens como Python oferecem listas poderosas com operações como adicionar, remover, ordenar e filtrar elementos."
+  },
+  {
+    word: "GRAFICO",
+    hints: [
+      "Representação visual de dados e informações",
+      "Pode ser de barras, pizza, linha, dispersão, etc.",
+      "Facilita a compreensão de grandes volumes de dados"
+    ],
+    lesson: "Um GRÁFICO é uma representação visual que traduz dados numéricos em imagens, facilitando a compreensão e análise de informações. Os tipos mais comuns são: barras (comparação), pizza (proporções), linha (tendências ao longo do tempo) e dispersão (relação entre variáveis). Gráficos são ferramentas essenciais em ciência, negócios, governo e educação. Eles transformam números abstratos em padrões visuais facilmente compreensíveis — o cérebro humano processa imagens 60.000 vezes mais rápido que texto."
+  },
+  {
+    word: "CLOUD",
+    hints: [
+      "Armazenamento e processamento via internet",
+      "Permite acessar seus dados de qualquer lugar",
+      "Exemplos: Google Drive, OneDrive, AWS"
+    ],
+    lesson: "CLOUD (computação em nuvem) é o modelo de entrega de serviços de computação (armazenamento, processamento, bancos de dados) via internet. Em vez de rodar tudo no seu computador local, você usa recursos de servidores remotos. Vantagens: acesso de qualquer lugar, escalabilidade (aumentar/reduzir recursos conforme necessário), pagamento por uso. Principais provedores: Amazon AWS, Google Cloud, Microsoft Azure. A nuvem é a base de streaming (Netflix), redes sociais, e-mail e praticamente todos os serviços modernos da internet."
+  },
+  {
+    word: "LOG",
+    hints: [
+      "Registro de eventos e ações do sistema",
+      "Serve para monitorar e depurar programas",
+      "Pode ser texto simples ou formato estruturado"
+    ],
+    lesson: "Um LOG é um registro cronológico de eventos, ações ou erros do sistema ou de um programa. Funciona como um 'diário' do computador: cada ação importante fica registrada para consulta posterior. Logs são essenciais para: depurar erros (encontrar o que causou um bug), monitorar segurança (detectar acessos suspeitos), auditoria (rastrear quem fez o quê). Em servidores, logs são analisados por ferramentas como ELK Stack ou Splunk. Um bom sistema de logging é crucial para manter softwares funcionando corretamente."
+  },
+  {
+    word: "VIDEO",
+    hints: [
+      "Sequência de imagens exibidas em rápida sucessão",
+      "Cada imagem é um frame (quadro)",
+      "Streaming permite assistir sem baixar o arquivo"
+    ],
+    lesson: "Um VÍDEO é uma sequência de imagens (frames) exibidas em rápida sucessão (geralmente 24 a 60 frames por segundo) que cria a ilusão de movimento. O conceito existe desde o cinema do século XIX, mas a computação digital transformou completamente a produção e distribuição de vídeo. Formatos como MP4, AVI e MKV comprimem dados para facilitar armazenamento e transmissão. O streaming (Netflix, YouTube) permite assistir vídeos em tempo real sem precisar baixar o arquivo completo."
+  },
+  {
+    word: "AUDIO",
+    hints: [
+      "Som digital processado pelo computador",
+      "Pode ser voz, música ou outros sons",
+      "Formatos comuns: MP3, WAV, AAC"
+    ],
+    lesson: "ÁUDIO digital é a representação eletrônica de sons — voz, música, efeitos sonoros — processados por um computador. O som analógico (onda contínua) é convertido em dados digitais (sequência de números) por um conversor analógico-digital (ADC). Formatos como MP3 usam compressão para reduzir tamanho sem perder muita qualidade. Áudio digital é a base de música em streaming (Spotify), podcasts, chamadas de vídeo e assistentes virtuais (Alexa, Siri). A qualidade é medida por taxa de amostragem (44.1 kHz para CD) e bitrate."
+  },
+  {
+    word: "TERMINAL",
+    hints: [
+      "Interface de texto para interagir com o computador",
+      "O usuário digita comandos em vez de clicar em ícones",
+      "É muito usado por desenvolvedores e administradores de sistemas"
+    ],
+    lesson: "O TERMINAL (ou console, linha de comando) é uma interface de texto que permite interagir diretamente com o sistema operacional digitando comandos. Diferente da interface gráfica (GUI), onde você clica em ícones, no terminal você escreve comandos como 'ls' (listar arquivos) ou 'cd' (mudar diretório). Apesar de parecer antigo, o terminal é extremamente poderoso: permite automatizar tarefas, gerenciar servidores remotos e executar operações complexas com poucos comandos. É uma ferramenta essencial para desenvolvedores e administradores de sistemas."
+  }
 ];
 
 const BODY_PARTS = ["head","torso","armL","armR","legL","legR"];
@@ -635,8 +1078,8 @@ const MAX_WRONG = 6;
 let players = [];
 let currentPlayerIndex = 0;
 let currentWord = null;
-let currentHint = null;
-let currentConcept = null;
+let currentWordData = null;
+let currentHintLevel = 0;
 let guessedLetters = [];
 let wrongGuesses = 0;
 let usedWords = [];
@@ -712,8 +1155,8 @@ function nextWord() {
   usedWords.push(wordData.word);
 
   currentWord = wordData.word.toUpperCase();
-  currentHint = wordData.hint;
-  currentConcept = wordData.concept;
+  currentWordData = wordData;
+  currentHintLevel = 1;
   guessedLetters = [];
   wrongGuesses = 0;
   roundActive = true;
@@ -735,7 +1178,7 @@ function advanceToNextActive() {
 }
 
 function renderGame() {
-  document.getElementById("hintText").textContent = currentHint;
+  renderHint();
   document.getElementById("currentTurnName").textContent =
     players[currentPlayerIndex].name + (players[currentPlayerIndex].eliminated ? " (ELIMINADO)" : "");
 
@@ -744,6 +1187,33 @@ function renderGame() {
   renderGamePlayers();
   updateWrongCount();
   renderHangman();
+}
+
+function renderHint() {
+  const hintEl = document.getElementById("hintText");
+  const levelEl = document.getElementById("hintLevel");
+  
+  let hintText = "";
+  if (currentHintLevel >= 1 && currentWordData.hints[0]) {
+    hintText = currentWordData.hints[0];
+  }
+  if (currentHintLevel >= 2 && currentWordData.hints[1]) {
+    hintText += " → " + currentWordData.hints[1];
+  }
+  if (currentHintLevel >= 3 && currentWordData.hints[2]) {
+    hintText += " → " + currentWordData.hints[2];
+  }
+  
+  hintEl.textContent = hintText;
+  levelEl.textContent = "Dica " + currentHintLevel + "/3";
+}
+
+function updateHintLevel() {
+  if (wrongGuesses >= 4 && currentHintLevel < 3) {
+    currentHintLevel = 3;
+  } else if (wrongGuesses >= 2 && currentHintLevel < 2) {
+    currentHintLevel = 2;
+  }
 }
 
 function renderWord() {
@@ -822,6 +1292,7 @@ function guessLetter(letter) {
   } else {
     players[currentPlayerIndex].score = Math.max(0, players[currentPlayerIndex].score - 1);
     wrongGuesses++;
+    updateHintLevel();
     renderGame();
 
     if (wrongGuesses >= MAX_WRONG) {
@@ -895,8 +1366,8 @@ function endRound(won) {
   }
 
   document.getElementById("resultWord").textContent = currentWord;
-  document.getElementById("resultConcept").textContent = currentConcept;
-  document.getElementById("resultHint").textContent = currentHint;
+  document.getElementById("resultLesson").textContent = currentWordData.lesson;
+  document.getElementById("resultHintLevel").textContent = "Dicas usadas: " + currentHintLevel + "/3";
 
   renderResultScores();
 
