@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATA39 — Jogo da Forca</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06060e;
+  --surface: rgba(255,255,255,0.03);
+  --surface2: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.08);
+  --text: #e8e8f0;
+  --text2: #8888aa;
+  --accent: #6c5ce7;
+  --accent2: #a29bfe;
+  --green: #00cec9;
+  --gold: #fdcb6e;
+  --red: #ff7675;
+  --gradient1: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  --gradient2: linear-gradient(135deg, #00cec9, #55efc4);
+  --gradient3: linear-gradient(135deg, #fd79a8, #e84393);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(108,92,231,0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(0,206,201,0.05) 0%, transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+.container {
+  max-width: 860px; margin: 0 auto; padding: 30px 20px;
+  position: relative; z-index: 1;
+}
+.header {
+  text-align: center; margin-bottom: 30px; padding: 30px 20px 20px;
+}
+.header-badge {
+  display: inline-block; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 100px; padding: 6px 18px; font-size: 12px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); margin-bottom: 16px;
+}
+.header h1 {
+  font-size: 3.5em; font-weight: 900; background: var(--gradient1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1; margin-bottom: 8px; letter-spacing: -2px;
+}
+.header .subtitle {
+  font-size: 1em; color: var(--text2); font-weight: 400;
+}
+.card {
+  background: var(--surface); backdrop-filter: blur(20px);
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: 28px; margin: 14px 0; transition: border-color 0.3s;
+}
+.card:hover { border-color: rgba(108,92,231,0.2); }
+.card-title {
+  font-size: 0.75em; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text2); margin-bottom: 16px;
+}
+.input-group { margin: 10px 0; }
+.input-group label {
+  display: block; font-size: 13px; font-weight: 600;
+  color: var(--text2); margin-bottom: 6px;
+}
+input {
+  width: 100%; background: rgba(255,255,255,0.04); border: 1.5px solid var(--border);
+  color: var(--text); padding: 14px 18px; border-radius: 12px; font-size: 15px;
+  font-family: inherit; outline: none; transition: all 0.25s;
+}
+input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,92,231,0.15); background: rgba(255,255,255,0.06); }
+input::placeholder { color: #444466; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 30px; border: none; border-radius: 12px; font-size: 14px;
+  font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.2s;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-primary { background: var(--gradient1); color: #fff; box-shadow: 0 4px 20px rgba(108,92,231,0.3); }
+.btn-primary:hover { box-shadow: 0 6px 30px rgba(108,92,231,0.4); }
+.btn-green { background: var(--gradient2); color: #06060e; box-shadow: 0 4px 20px rgba(0,206,201,0.3); }
+.btn-green:hover { box-shadow: 0 6px 30px rgba(0,206,201,0.4); }
+.btn-gold {
+  background: linear-gradient(135deg, #fdcb6e, #e17055); color: #06060e;
+  box-shadow: 0 4px 20px rgba(253,203,110,0.3); font-size: 16px; padding: 16px 40px;
+}
+.btn-gold:hover { box-shadow: 0 6px 30px rgba(253,203,110,0.5); }
+.btn-stop {
+  background: var(--gradient3); color: #fff; font-size: 18px; padding: 16px 50px;
+  border-radius: 16px; box-shadow: 0 4px 30px rgba(232,67,147,0.3);
+}
+.btn-stop:hover { box-shadow: 0 6px 40px rgba(232,67,147,0.5); }
+.btn-sm { padding: 10px 20px; font-size: 12px; border-radius: 10px; }
+.btn-outline {
+  background: transparent; border: 1.5px solid var(--border); color: var(--text2);
+}
+.btn-outline:hover { border-color: var(--accent); color: var(--accent2); }
+.btn-letter {
+  width: 44px; height: 44px; padding: 0; border-radius: 10px; font-size: 16px;
+  font-weight: 700; font-family: 'JetBrains Mono', monospace;
+  background: var(--surface2); border: 1.5px solid var(--border); color: var(--text);
+}
+.btn-letter:hover:not(.used):not(.correct):not(.wrong) {
+  border-color: var(--accent); color: var(--accent2); transform: translateY(-2px);
+}
+.btn-letter.used { opacity: 0.3; cursor: default; transform: none; }
+.btn-letter.correct { background: rgba(0,206,201,0.15); border-color: var(--green); color: var(--green); }
+.btn-letter.wrong { background: rgba(255,118,117,0.15); border-color: var(--red); color: var(--red); }
+
+.screen { display: none; animation: fadeIn 0.35s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.intro-hero { text-align: center; padding: 10px 0; }
+.intro-hero .big-icon { font-size: 4em; margin-bottom: 10px; }
+.intro-hero p { color: var(--text2); font-size: 1em; margin-top: 8px; }
+
+.rules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 18px 0; }
+.rule-card {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 14px; text-align: center;
+}
+.rule-card .step {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 8px; background: var(--gradient1);
+  color: #fff; font-weight: 800; font-size: 13px; margin-bottom: 8px;
+}
+.rule-card .rule-title { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+.rule-card .rule-desc { font-size: 11px; color: var(--text2); line-height: 1.4; }
+
+.scoring-box {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px; margin: 14px 0;
+}
+.scoring-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.scoring-row .pts { font-family: 'JetBrains Mono', monospace; font-weight: 700; min-width: 30px; }
+.scoring-row .pts.green { color: var(--green); }
+.scoring-row .pts.gold { color: var(--gold); }
+.scoring-row .pts.red { color: var(--red); }
+.scoring-row .desc { font-size: 12px; color: var(--text2); }
+
+.menu-actions { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 20px; }
+.menu-action-card {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 16px;
+  padding: 26px 20px; text-align: center; cursor: pointer; transition: all 0.25s;
+}
+.menu-action-card:hover {
+  border-color: var(--accent); background: rgba(108,92,231,0.06); transform: translateY(-2px);
+}
+.menu-action-card .icon { font-size: 1.8em; margin-bottom: 10px; }
+.menu-action-card .label { font-size: 15px; font-weight: 700; }
+.menu-action-card .desc { font-size: 11px; color: var(--text2); margin-top: 4px; }
+.divider {
+  display: flex; align-items: center; gap: 16px; margin: 24px 0;
+  color: var(--text2); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+}
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin: 14px 0; }
+.player-chip {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px; text-align: center; transition: all 0.2s;
+}
+.player-chip.current { border-color: var(--gold); background: rgba(253,203,110,0.08); }
+.player-chip.eliminated { opacity: 0.35; border-color: var(--red); }
+.player-chip .name { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+.player-chip .pts { font-size: 11px; color: var(--accent2); font-weight: 600; }
+.player-chip .elim-tag { font-size: 10px; color: var(--red); font-weight: 700; margin-top: 2px; }
+
+.game-layout { display: grid; grid-template-columns: 1fr 280px; gap: 16px; }
+.game-main { min-width: 0; }
+.game-sidebar { min-width: 0; }
+
+.hangman-area {
+  text-align: center; padding: 20px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 16px; margin-bottom: 16px;
+}
+.hangman-svg { width: 180px; height: 200px; }
+.hangman-svg .gallows { stroke: var(--text2); stroke-width: 3; fill: none; }
+.hangman-svg .body-part { stroke: var(--red); stroke-width: 3; fill: none; opacity: 0; transition: opacity 0.3s; }
+.hangman-svg .body-part.visible { opacity: 1; }
+
+.word-area {
+  text-align: center; margin: 20px 0;
+}
+.word-display {
+  font-family: 'JetBrains Mono', monospace; font-size: 2.5em; font-weight: 700;
+  letter-spacing: 8px; color: var(--text); min-height: 60px;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  flex-wrap: wrap;
+}
+.word-char {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 50px; border-bottom: 3px solid var(--accent2);
+  font-size: 1em; transition: all 0.3s;
+}
+.word-char.revealed { border-bottom-color: var(--green); color: var(--green); }
+.word-char.space { border-bottom: none; width: 20px; }
+
+.letters-grid {
+  display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 16px 0;
+}
+
+.turn-info {
+  text-align: center; padding: 12px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px;
+}
+.turn-info .turn-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); }
+.turn-info .turn-name { font-size: 16px; font-weight: 700; color: var(--gold); margin-top: 4px; }
+
+.wrong-count {
+  text-align: center; font-size: 12px; color: var(--text2); margin-top: 8px;
+}
+.wrong-count span { color: var(--red); font-weight: 700; }
+
+.result-word {
+  text-align: center; margin: 20px 0;
+}
+.result-word .label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); margin-bottom: 8px; }
+.result-word .the-word {
+  font-family: 'JetBrains Mono', monospace; font-size: 2.5em; font-weight: 700;
+  background: var(--gradient1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.result-concept {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px; text-align: center; margin: 16px 0;
+}
+.result-concept .concept-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); margin-bottom: 6px; }
+.result-concept .concept-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+.result-status {
+  text-align: center; font-size: 18px; font-weight: 800; margin: 16px 0;
+}
+.result-status.won { color: var(--green); }
+.result-status.lost { color: var(--red); }
+
+.podium { display: grid; gap: 6px; margin: 14px 0; }
+.podium-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s;
+}
+.podium-item.rank-1 {
+  background: linear-gradient(135deg, rgba(253,203,110,0.1), rgba(253,203,110,0.03));
+  border-color: rgba(253,203,110,0.3);
+}
+.podium-rank {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 13px; background: var(--surface); color: var(--text2); flex-shrink: 0;
+}
+.podium-item.rank-1 .podium-rank { background: var(--gradient1); color: #fff; }
+.podium-name { flex: 1; font-weight: 700; font-size: 14px; }
+.podium-score { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px; color: var(--accent2); }
+.podium-item.rank-1 .podium-score { color: var(--gold); }
+
+.text-center { text-align: center; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+
+.local-add-area { display: flex; gap: 8px; margin-top: 12px; }
+.local-add-area input { flex: 1; padding: 10px 14px; font-size: 13px; }
+.local-add-area .btn { padding: 10px 16px; font-size: 12px; }
+
+.error-toast {
+  position: fixed; top: 20px; left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: rgba(255,118,117,0.15); backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,118,117,0.3); color: var(--red);
+  padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 14px;
+  z-index: 999; transition: transform 0.3s ease;
+}
+.error-toast.show { transform: translateX(-50%) translateY(0); }
+
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: #0d0d1a; border: 1px solid var(--border); border-radius: 20px;
+  padding: 32px; max-width: 420px; width: 90%; text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+.modal h2 {
+  font-size: 1.3em; margin-bottom: 6px; background: var(--gradient3);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.modal p { font-size: 13px; color: var(--text2); margin-bottom: 18px; }
+.modal input {
+  text-align: center; font-size: 18px; font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px;
+}
+.modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+.elimination-flash {
+  position: fixed; inset: 0; z-index: 200; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  animation: elimFlash 1.5s ease forwards;
+}
+.elimination-flash .text {
+  font-size: 3em; font-weight: 900; color: var(--red);
+  text-shadow: 0 0 40px rgba(255,118,117,0.6);
+}
+@keyframes elimFlash {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.footer {
+  text-align: center; margin-top: 30px; padding: 16px;
+  font-size: 11px; color: #333355; letter-spacing: 1px;
+}
+
+@media (max-width: 700px) {
+  .game-layout { grid-template-columns: 1fr; }
+  .game-sidebar { order: -1; }
+  .header h1 { font-size: 2.5em; }
+  .rules-grid { grid-template-columns: 1fr; }
+  .word-display { font-size: 1.8em; letter-spacing: 4px; }
+  .word-char { width: 30px; height: 40px; }
+  .btn-letter { width: 36px; height: 36px; font-size: 14px; }
+  .hangman-svg { width: 140px; height: 160px; }
+}
+</style>
+</head>
+<body>
+
+<div class="error-toast" id="error"></div>
+
+<div class="modal-overlay" id="guessModal">
+  <div class="modal">
+    <h2>&#9888;&#65039; Chutar a Palavra</h2>
+    <p>Se acertar, ganha a rodada! Se errar, voc&ecirc; &eacute; <strong style="color:var(--red)">ELIMINADO</strong> do jogo.</p>
+    <input id="guessInput" placeholder="Digite a palavra..." maxlength="30" autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeGuessModal()">Cancelar</button>
+      <button class="btn btn-stop btn-sm" onclick="submitGuess()" style="font-size:14px; padding:10px 24px;">Chutar!</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="header-badge">MATA39 — 2026.2</div>
+    <h1>FORCA</h1>
+    <div class="subtitle">Adivinhe palavras de computação antes que o boneco apareça!</div>
+  </div>
+
+  <!-- INTRO -->
+  <div id="screen-intro" class="screen active">
+    <div class="card">
+      <div class="intro-hero">
+        <div class="big-icon">&#128128;</div>
+        <p>Descubra palavras relacionadas a computação usando dicas!</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Como Jogar</div>
+      <div class="rules-grid">
+        <div class="rule-card">
+          <div class="step">1</div>
+          <div class="rule-title">Adicione jogadores</div>
+          <div class="rule-desc">Insira os nomes de todos que vao jogar</div>
+        </div>
+        <div class="rule-card">
+          <div class="step">2</div>
+          <div class="rule-title">Leia a dica</div>
+          <div class="rule-desc">Cada rodada comeca com uma dica para o jogador da vez</div>
+        </div>
+        <div class="rule-card">
+          <div class="step">3</div>
+          <div class="rule-title">Tente letras</div>
+          <div class="rule-desc">Errou? A vez passa pro proximo. 6 erros = perde!</div>
+        </div>
+        <div class="rule-card">
+          <div class="step">4</div>
+          <div class="rule-title">Chute a palavra</div>
+          <div class="rule-desc">Quer arriscar? Chute o nome completo — se errar, elimina!</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pontuação</div>
+      <div class="scoring-box" style="border:none; background:transparent; padding:0;">
+        <div class="scoring-row"><span class="pts green">+1</span><span class="desc">Acertou uma letra que existia na palavra</span></div>
+        <div class="scoring-row"><span class="pts gold">+Bônus</span><span class="desc">Chutou e acertou a palavra inteira</span></div>
+        <div class="scoring-row"><span class="pts red">-1</span><span class="desc">Errou uma letra (e a vez passa)</span></div>
+        <div class="scoring-row"><span class="pts red">ELIM</span><span class="desc">Chutou a palavra e errou = eliminado</span></div>
+      </div>
+    </div>
+    <div class="text-center mt-16">
+      <button class="btn btn-primary" onclick="showScreen('setup')">Começar a Jogar</button>
+    </div>
+  </div>
+
+  <!-- SETUP -->
+  <div id="screen-setup" class="screen">
+    <div class="card">
+      <div class="card-title">Adicionar Jogadores</div>
+      <div id="setupPlayers"></div>
+      <div class="local-add-area">
+        <input id="setupPlayerInput" placeholder="Nome do jogador..." maxlength="15"
+          onkeydown="if(event.key==='Enter')addSetupPlayer()">
+        <button class="btn btn-green btn-sm" onclick="addSetupPlayer()">+ Adicionar</button>
+      </div>
+      <div id="setupError" style="color:var(--red); font-size:12px; margin-top:8px; display:none;"></div>
+    </div>
+    <div class="card" id="setupStartCard" style="display:none">
+      <div class="card-title">Iniciar Jogo</div>
+      <p style="font-size:12px; color:var(--text2); text-align:center; margin-bottom:14px;">
+        Jogadores por rodada: todos participam turnos
+      </p>
+      <div class="text-center">
+        <button class="btn btn-gold" onclick="startGame()">Começar!</button>
+      </div>
+    </div>
+    <div class="text-center mt-16">
+      <button class="btn btn-outline btn-sm" onclick="showScreen('intro')">Voltar</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="screen-game" class="screen">
+    <div class="game-layout">
+      <div class="game-main">
+        <div class="hangman-area">
+          <svg class="hangman-svg" viewBox="0 0 180 200">
+            <line class="gallows" x1="20" y1="195" x2="160" y2="195"/>
+            <line class="gallows" x1="50" y1="195" x2="50" y2="15"/>
+            <line class="gallows" x1="50" y1="15" x2="120" y2="15"/>
+            <line class="gallows" x1="120" y1="15" x2="120" y2="35"/>
+            <circle class="body-part" id="head" cx="120" cy="50" r="15"/>
+            <line class="body-part" id="torso" x1="120" y1="65" x2="120" y2="120"/>
+            <line class="body-part" id="armL" x1="120" y1="80" x2="95" y2="105"/>
+            <line class="body-part" id="armR" x1="120" y1="80" x2="145" y2="105"/>
+            <line class="body-part" id="legL" x1="120" y1="120" x2="95" y2="155"/>
+            <line class="body-part" id="legR" x1="120" y1="120" x2="145" y2="155"/>
+          </svg>
+        </div>
+
+        <div class="word-area">
+          <div class="word-display" id="wordDisplay"></div>
+        </div>
+
+        <div class="letters-grid" id="lettersGrid"></div>
+
+        <div class="text-center mt-16" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <button class="btn btn-stop" onclick="openGuessModal()" style="font-size:14px; padding:14px 30px;">&#128161; Chutar Palavra</button>
+        </div>
+      </div>
+
+      <div class="game-sidebar">
+        <div class="turn-info" id="turnInfo">
+          <div class="turn-label">Vez de</div>
+          <div class="turn-name" id="currentTurnName">-</div>
+        </div>
+
+        <div class="hint-box">
+          <div class="hint-label">Dica</div>
+          <div class="hint-text" id="hintText">-</div>
+        </div>
+
+        <div class="card" style="padding:16px">
+          <div class="card-title">Jogadores</div>
+          <div id="gamePlayers" class="players-grid" style="grid-template-columns:1fr"></div>
+        </div>
+
+        <div class="wrong-count">
+          Erros: <span id="wrongCount">0</span> / 6
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <div class="card">
+      <div class="card-title">Resultado da Rodada</div>
+      <div class="result-status" id="resultStatus"></div>
+      <div class="result-word">
+        <div class="label">Palavra</div>
+        <div class="the-word" id="resultWord"></div>
+      </div>
+      <div class="result-concept">
+        <div class="concept-label">Conceito</div>
+        <div class="concept-text" id="resultConcept"></div>
+      </div>
+      <div class="hint-box" style="margin-top:12px">
+        <div class="hint-label">Dica que foi mostrada</div>
+        <div class="hint-text" id="resultHint"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Placar</div>
+      <div class="podium" id="resultScores"></div>
+    </div>
+    <div class="text-center mt-24">
+      <button class="btn btn-gold" onclick="nextRound()">Próxima Rodada</button>
+    </div>
+  </div>
+
+  <!-- GAME OVER -->
+  <div id="screen-gameover" class="screen">
+    <div class="card text-center">
+      <div class="intro-hero">
+        <div class="big-icon">&#127942;</div>
+        <h2 style="font-size:1.8em; margin:10px 0;">Fim de Jogo!</h2>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Classificação Final</div>
+      <div class="podium" id="finalScores"></div>
+    </div>
+    <div class="text-center mt-24">
+      <button class="btn btn-primary" onclick="resetGame()">Jogar Novamente</button>
+    </div>
+  </div>
+
+  <div class="footer">MATA39 — 2026.2 — Equipe 3 — Seminário 1</div>
+</div>
+
+<script>
+const WORDS_DB = [
+  { word: "MOUSE", hint: "Dispositivo que voce segura na mao para apontar na tela", concept: "Dispositivo de entrada que controla o cursor do computador" },
+  { word: "TECLADO", hint: "Tem muitas letras e numeros, voce digita nele", concept: "Dispositivo de entrada usado para digitar textos e comandos" },
+  { word: "MONITOR", hint: "E a tela onde voce ve tudo do computador", concept: "Dispositivo de saida que exibe imagens e texto" },
+  { word: "CPU", hint: "E o cerebro do computador, processa tudo", concept: "Unidade Central de Processamento - executa instrucoes do programa" },
+  { word: "IMPRESSORA", hint: "Coloca papel e sai o documento impresso", concept: "Dispositivo de saida que imprime documentos em papel" },
+  { word: "INTERNET", hint: "Rede mundial que conecta computadores", concept: "Rede global de computadores interligados" },
+  { word: "EMAIL", hint: "Voce manda mensagens por ele, tipo uma carta digital", concept: "Correio eletronico - sistema de envio de mensagens digitais" },
+  { word: "SENHA", hint: "Voce digita para entrar em uma conta, deve ser secreta", concept: "Sequencia de caracteres usada para autenticacao de usuario" },
+  { word: "ARQUIVO", hint: "Voce salva coisas nele, pode ser documento ou imagem", concept: "Conjunto de dados armazenados no computador" },
+  { word: "PASTA", hint: "Dentro dela voce guarda varios arquivos", concept: "Diretorio que organiza e agrupa arquivos" },
+  { word: "DOWNLOAD", hint: "Baixar algo da internet para o computador", concept: "Transferencia de dados de um servidor para o seu dispositivo" },
+  { word: "UPLOAD", hint: "Enviar algo do seu computador para a internet", concept: "Transferencia de dados do seu dispositivo para um servidor" },
+  { word: "SITE", hint: "Voce acessa pelo navegador, e uma pagina na web", concept: "Conjunto de paginas web acessiveis pela internet" },
+  { word: "NAVEGADOR", hint: "Programa que voce usa para acessar sites (Chrome, Firefox)", concept: "Software que permite acessar e visualizar paginas web" },
+  { word: "SOFTWARE", hint: "Sao os programas que rodam no computador", concept: "Conjunto de programas e dados que fazem o computador funcionar" },
+  { word: "HARDWARE", hint: "Sao as partes fisicas que voce pode tocar", concept: "Componentes fisicos do computador (pecas e perifericos)" },
+  { word: "BANCO", hint: "Guarda muitas informacoes organizadas (Dados)", concept: "Conjunto organizado de dados armazenados digitalmente" },
+  { word: "PROGRAMA", hint: "Voce instala para usar no computador (app)", concept: "Sequencia de instrucoes que o computador executa" },
+  { word: "TABLET", hint: "Computador portatil com tela sensivel ao toque", concept: "Dispositivo movel com tela touchscreen" },
+  { word: "NOTEBOOK", hint: "Computador portatil que fecha como um livro", concept: "Computador portatil de pequeno porte" },
+  { word: "WEBCAM", hint: "Camera que fica no computador para videochamadas", concept: "Camera digital para comunicacao por video" },
+  { word: "FONE", hint: "Voce coloca no ouvido para ouvir audio", concept: "Dispositivo de audio pessoal para ouvir musica ou chamadas" },
+  { word: "CABO", hint: "Fio que liga um dispositivo ao outro", concept: "Conector fisico para transmissao de dados ou energia" },
+  { word: "BLUETOOTH", hint: "Conexao sem fio de curta distancia", concept: "Tecnologia sem fio para troca de dados entre dispositivos" },
+  { word: "WIFI", hint: "Internet sem fio, voce conecta pelo sinal", concept: "Tecnologia de rede sem fio para acesso a internet" },
+  { word: "CELULAR", hint: "Telefone inteligente que voce leva na mao", concept: "Dispositivo movel multifuncional com telefone e internet" },
+  { word: "BIT", hint: "A menor unidade de informacao (0 ou 1)", concept: "Unidade basica de informacao digital - pode ser 0 ou 1" },
+  { word: "BYTE", hint: "Conjunto de 8 bits", concept: "Unidade de dados composta por 8 bits" },
+  { word: "DADOS", hint: "Informacoes guardadas no computador", concept: "Informacoes armazenadas ou processadas pelo computador" },
+  { word: "TEXTO", hint: "Sequencia de letras e palavras", concept: "Conjunto de caracteres que formam palavras e frases" },
+  { word: "NUMERO", hint: "Valor quantitativo, como 1, 2, 3...", concept: "Representacao matematica de uma quantidade" },
+  { word: "SISTEMA", hint: "Conjunto de componentes que trabalham juntos", concept: "Conjunto integrado de componentes que funcionam como um todo" },
+  { word: "REDE", hint: "Conjunto de computadores conectados", concept: "Grupo de dispositivos interligados para compartilhar recursos" },
+  { word: "SERVIDOR", hint: "Computador que atende pedidos de outros", concept: "Computador que fornece servicos e dados para outros dispositivos" },
+  { word: "KERNEL", hint: "Nucleo do sistema operacional", concept: "Parte central do SO que gerencia recursos do hardware" },
+  { word: "LINUX", hint: "Sistema operacional gratuito e de codigo aberto", concept: "Sistema operacional open source criado por Linus Torvalds" },
+  { word: "WINDOWS", hint: "Sistema operacional da Microsoft", concept: "Sistema operacional mais usado do mundo, criado pela Microsoft" },
+  { word: "MACOS", hint: "Sistema operacional da Apple", concept: "Sistema operacional dos computadores Mac da Apple" },
+  { word: "ANDROID", hint: "Sistema operacional de celulares da Google", concept: "Sistema operacional mobile open source do Google" },
+  { word: "APP", hint: "Aplicativo que voce instala no celular", concept: "Aplicativo de software para dispositivos moveis" },
+  { word: "CLOUD", hint: "Armazenamento na nuvem, pela internet", concept: "Servico de armazenamento e processamento via internet" },
+  { word: "CACHE", hint: "Memoria temporaria para acesso rapido", concept: "Armazenamento temporario para dados de acesso frequente" },
+  { word: "BUG", hint: "Erro ou falha no programa", concept: "Erro no codigo que causa comportamento inesperado" },
+  { word: "DEBUG", hint: "Processo de encontrar e corrigir erros", concept: "Atividade de identificar e remover bugs do codigo" },
+  { word: "LOG", hint: "Registro de eventos do sistema", concept: "Arquivo que registra acoes e eventos do sistema" },
+  { word: "CHAT", hint: "Conversa por mensagens na internet", concept: "Sistema de comunicacao por mensagens em tempo real" },
+  { word: "VIDEO", hint: "Sequencia de imagens em movimento", concept: "Midia visual com imagens em sequencia" },
+  { word: "AUDIO", hint: "Som, musica, voz", concept: "Sinal sonoro processado digitalmente" },
+  { word: "FOTO", hint: "Imagem capturada por camera", concept: "Imagem digital capturada por dispositivo" },
+  { word: "PIX", hint: "Pagamento instantaneo feito pelo banco", concept: "Sistema de transferencia bancaria instantanea" },
+  { word: "LINK", hint: "Endereco que voce clica para acessar algo", concept: "Referencia eletronica para acessar um recurso" },
+  { word: "GOOGLE", hint: "Mecanismo de busca mais famoso do mundo", concept: "Empresa de tecnologia e buscador na internet" },
+  { word: "LOGIN", hint: "Processo de entrar em uma conta", concept: "Acao de autenticar-se em um sistema" },
+  { word: "PIXEL", hint: "Menor ponto que forma uma imagem na tela", concept: "Menor elemento de uma imagem digital" },
+  { word: "TELA", hint: "Display do computador ou celular", concept: "Superficie de exibicao de informacoes visuais" },
+  { word: "MEMORIA", hint: "Guarda informacoes temporariamente", concept: "Componente que armazena dados para acesso rapido" },
+  { word: "TABELA", hint: "Organizacao de dados em linhas e colunas", concept: "Estrutura de dados bidimensional" },
+  { word: "LISTA", hint: "Sequencia ordenada de itens", concept: "Colecao ordenada de elementos" },
+  { word: "GRAFICO", hint: "Representacao visual de dados", concept: "Ilustracao visual que representa informacoes" },
+  { word: "PYTHON", hint: "Linguagem de programacao com nome de animal", concept: "Linguagem de programacao versatil e popular" },
+  { word: "JAVA", hint: "Linguagem de programacao que usa xicara de cafe", concept: "Linguagem de programacao multiplataforma" },
+  { word: "HTML", hint: "Linguagem de marcacao para criar paginas web", concept: "Linguagem de marcacao para estruturar conteudo web" },
+  { word: "CSS", hint: "Linguagem que deixa bonito o site", concept: "Linguagem de estilo para design de paginas web" },
+  { word: "JAVASCRIPT", hint: "Linguagem que faz sites interativos", concept: "Linguagem de programacao para web" },
+  { word: "SQL", hint: "Linguagem para consultar bancos de dados", concept: "Linguagem de consulta para gerenciar dados" },
+  { word: "COMPILADOR", hint: "Traduz codigo para linguagem de maquina", concept: "Programa que converte codigo-fonte em executavel" },
+  { word: "VIRUS", hint: "Programa malicioso que danifica o computador", concept: "Software projetado para causar danos ao sistema" },
+  { word: "FIREWALL", hint: "Protecao contra ataques pela internet", concept: "Sistema de seguranca que filtra trafego de rede" },
+  { word: "ALGORITMO", hint: "Sequencia de passos para resolver um problema", concept: "Conjunto ordenado de instrucoes para executar uma tarefa" },
+  { word: "VARIÁVEL", hint: "Espaco na memoria que guarda um valor", concept: "Espaco reservado na memoria para armazenar dados" },
+  { word: "LOOP", hint: "Repeticao de um bloco de codigo", concept: "Estrutura de controle que repete instrucoes" },
+  { word: "ARRAY", hint: "Vetor que guarda varios valores", concept: "Estrutura de dados que armazena elementos do mesmo tipo" },
+  { word: "STRING", hint: "Sequencia de caracteres (texto)", concept: "Tipo de dado que representa texto" },
+  { word: "INTEGER", hint: "Numero inteiro", concept: "Tipo numerico para valores inteiros" },
+  { word: "BOOLEAN", hint: "Verdadeiro ou Falso", concept: "Tipo logico com dois valores possiveis" },
+  { word: "OBJECT", hint: "Instancia de uma classe", concept: "Estrutura que agrupa dados e comportamentos" },
+  { word: "CLASS", hint: "Molde para criar objetos", concept: "Modelo que define propriedades e metodos" },
+  { word: "FUNCTION", hint: "Bloco de codigo reutilizavel", concept: "Bloco de codigo que executa uma tarefa especifica" },
+  { word: "DEPLOY", hint: "Publicar uma aplicacao no ar", concept: "Processo de colocar uma aplicacao em producao" },
+  { word: "BACKUP", hint: "Copia de seguranca dos dados", concept: "Copia de seguranca para prevenir perdas" },
+  { word: "FRAMEWORK", hint: "Estrutura que facilita o desenvolvimento", concept: "Conjunto de ferramentas que acelera criacao de software" },
+  { word: "TERMINAL", hint: "Linha de comando para o computador", concept: "Interface de texto para interagir com o sistema" },
+  { word: "BROWSER", hint: "Outro nome para navegador web", concept: "Software para acessar paginas da internet" },
+  { word: "SERVER", hint: "Computador que hospeda sites e servicos", concept: "Maquina que fornece servicos em rede" },
+  { word: "ROUTER", hint: "Dispositivo que distribui internet na casa", concept: "Equipamento que direciona pacotes de dados em rede" },
+  { word: "MODEM", hint: "Caixa que recebe o sinal de internet", concept: "Modulador-demodulador para conexao de rede" },
+];
+
+const BODY_PARTS = ["head","torso","armL","armR","legL","legR"];
+const MAX_WRONG = 6;
+
+let players = [];
+let currentPlayerIndex = 0;
+let currentWord = null;
+let currentHint = null;
+let currentConcept = null;
+let guessedLetters = [];
+let wrongGuesses = 0;
+let usedWords = [];
+let roundActive = false;
+
+function showError(msg) {
+  const el = document.getElementById("error");
+  el.textContent = msg;
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 3000);
+}
+
+function showScreen(name) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById("screen-" + name).classList.add("active");
+}
+
+function addSetupPlayer() {
+  const input = document.getElementById("setupPlayerInput");
+  const name = input.value.trim();
+  const errEl = document.getElementById("setupError");
+
+  if (!name) { errEl.textContent = "Digite um nome!"; errEl.style.display = "block"; return; }
+  if (players.length >= 6) { errEl.textContent = "Maximo 6 jogadores!"; errEl.style.display = "block"; return; }
+  if (players.some(p => p.name === name)) { errEl.textContent = "Nome ja usado!"; errEl.style.display = "block"; return; }
+
+  errEl.style.display = "none";
+  players.push({ name, score: 0, eliminated: false });
+  input.value = "";
+  renderSetupPlayers();
+}
+
+function removeSetupPlayer(index) {
+  players.splice(index, 1);
+  renderSetupPlayers();
+}
+
+function renderSetupPlayers() {
+  const el = document.getElementById("setupPlayers");
+  el.innerHTML = "";
+  players.forEach((p, i) => {
+    const chip = document.createElement("div");
+    chip.className = "player-chip";
+    chip.style.marginBottom = "6px";
+    chip.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div class="name">${p.name}</div>
+          <div class="pts">0 pts</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="removeSetupPlayer(${i})" style="padding:6px 12px; font-size:11px;">X</button>
+      </div>`;
+    el.appendChild(chip);
+  });
+  document.getElementById("setupStartCard").style.display = players.length >= 2 ? "block" : "none";
+}
+
+function startGame() {
+  if (players.length < 2) { showError("Adicione pelo menos 2 jogadores!"); return; }
+  currentPlayerIndex = 0;
+  nextWord();
+}
+
+function nextWord() {
+  const available = WORDS_DB.filter(w => !usedWords.includes(w.word));
+  let wordData;
+  if (available.length === 0) {
+    usedWords = [];
+    wordData = WORDS_DB[Math.floor(Math.random() * WORDS_DB.length)];
+  } else {
+    wordData = available[Math.floor(Math.random() * available.length)];
+  }
+  usedWords.push(wordData.word);
+
+  currentWord = wordData.word.toUpperCase();
+  currentHint = wordData.hint;
+  currentConcept = wordData.concept;
+  guessedLetters = [];
+  wrongGuesses = 0;
+  roundActive = true;
+
+  advanceToNextActive();
+  renderGame();
+  showScreen("game");
+}
+
+function advanceToNextActive() {
+  const activePlayers = players.filter(p => !p.eliminated);
+  if (activePlayers.length === 0) { endGame(); return; }
+
+  let safety = 0;
+  while (players[currentPlayerIndex].eliminated && safety < players.length) {
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    safety++;
+  }
+}
+
+function renderGame() {
+  document.getElementById("hintText").textContent = currentHint;
+  document.getElementById("currentTurnName").textContent =
+    players[currentPlayerIndex].name + (players[currentPlayerIndex].eliminated ? " (ELIMINADO)" : "");
+
+  renderWord();
+  renderLetters();
+  renderGamePlayers();
+  updateWrongCount();
+  renderHangman();
+}
+
+function renderWord() {
+  const el = document.getElementById("wordDisplay");
+  el.innerHTML = "";
+  currentWord.split("").forEach(ch => {
+    const span = document.createElement("span");
+    span.className = "word-char" + (ch === " " ? " space" : "") + (guessedLetters.includes(ch) ? " revealed" : "");
+    span.textContent = (ch === " " || guessedLetters.includes(ch)) ? ch : "";
+    el.appendChild(span);
+  });
+}
+
+function renderLetters() {
+  const el = document.getElementById("lettersGrid");
+  el.innerHTML = "";
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
+    const btn = document.createElement("button");
+    btn.className = "btn-letter";
+    btn.textContent = l;
+    if (guessedLetters.includes(l)) {
+      btn.classList.add("used");
+      btn.classList.add(currentWord.includes(l) ? "correct" : "wrong");
+    }
+    btn.onclick = () => guessLetter(l);
+    el.appendChild(btn);
+  });
+}
+
+function renderGamePlayers() {
+  const el = document.getElementById("gamePlayers");
+  el.innerHTML = "";
+  players.forEach((p, i) => {
+    const chip = document.createElement("div");
+    let cls = "player-chip";
+    if (p.eliminated) cls += " eliminated";
+    if (i === currentPlayerIndex && !p.eliminated) cls += " current";
+    chip.className = cls;
+    chip.innerHTML = `
+      <div class="name">${p.name}</div>
+      <div class="pts">${p.score} pts</div>
+      ${p.eliminated ? '<div class="elim-tag">ELIMINADO</div>' : ''}`;
+    el.appendChild(chip);
+  });
+}
+
+function renderHangman() {
+  BODY_PARTS.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (i < wrongGuesses) el.classList.add("visible");
+    else el.classList.remove("visible");
+  });
+}
+
+function updateWrongCount() {
+  document.getElementById("wrongCount").textContent = wrongGuesses;
+}
+
+function guessLetter(letter) {
+  if (!roundActive) return;
+  if (players[currentPlayerIndex].eliminated) return;
+  if (guessedLetters.includes(letter)) return;
+
+  guessedLetters.push(letter);
+
+  if (currentWord.includes(letter)) {
+    players[currentPlayerIndex].score++;
+    renderGame();
+
+    const allRevealed = currentWord.split("").every(
+      ch => ch === " " || guessedLetters.includes(ch)
+    );
+    if (allRevealed) {
+      endRound(true);
+    }
+  } else {
+    players[currentPlayerIndex].score = Math.max(0, players[currentPlayerIndex].score - 1);
+    wrongGuesses++;
+    renderGame();
+
+    if (wrongGuesses >= MAX_WRONG) {
+      endRound(false);
+      return;
+    }
+
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    advanceToNextActive();
+    renderGame();
+  }
+}
+
+function openGuessModal() {
+  if (!roundActive) return;
+  if (players[currentPlayerIndex].eliminated) return;
+  document.getElementById("guessInput").value = "";
+  document.getElementById("guessModal").classList.add("active");
+  setTimeout(() => document.getElementById("guessInput").focus(), 100);
+}
+
+function closeGuessModal() {
+  document.getElementById("guessModal").classList.remove("active");
+}
+
+function submitGuess() {
+  const guess = document.getElementById("guessInput").value.trim().toUpperCase();
+  if (!guess) return;
+
+  closeGuessModal();
+
+  if (guess === currentWord) {
+    players[currentPlayerIndex].score += 10;
+    endRound(true);
+  } else {
+    const playerName = players[currentPlayerIndex].name;
+    players[currentPlayerIndex].eliminated = true;
+    players[currentPlayerIndex].score = Math.max(0, players[currentPlayerIndex].score - 3);
+    showEliminationFlash(playerName);
+
+    const activeCount = players.filter(p => !p.eliminated).length;
+    if (activeCount === 0) {
+      setTimeout(() => endRound(false), 1600);
+      return;
+    }
+
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    advanceToNextActive();
+    setTimeout(() => renderGame(), 100);
+  }
+}
+
+function showEliminationFlash(name) {
+  const flash = document.createElement("div");
+  flash.className = "elimination-flash";
+  flash.innerHTML = `<div class="text">${name} ELIMINADO!</div>`;
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 1600);
+}
+
+function endRound(won) {
+  roundActive = false;
+
+  const statusEl = document.getElementById("resultStatus");
+  if (won) {
+    statusEl.textContent = "Acertou!";
+    statusEl.className = "result-status won";
+  } else {
+    statusEl.textContent = "Nao acertou...";
+    statusEl.className = "result-status lost";
+  }
+
+  document.getElementById("resultWord").textContent = currentWord;
+  document.getElementById("resultConcept").textContent = currentConcept;
+  document.getElementById("resultHint").textContent = currentHint;
+
+  renderResultScores();
+
+  const activePlayers = players.filter(p => !p.eliminated);
+  if (activePlayers.length <= 1 && players.length > 1) {
+    setTimeout(() => showScreen("gameover"), 200);
+    renderFinalScores();
+  } else {
+    showScreen("result");
+  }
+}
+
+function renderResultScores() {
+  const sorted = players.slice().sort((a, b) => b.score - a.score);
+  const podium = document.getElementById("resultScores");
+  podium.innerHTML = "";
+  sorted.forEach((p, i) => {
+    const item = document.createElement("div");
+    item.className = "podium-item" + (i === 0 ? " rank-1" : "");
+    item.innerHTML = `
+      <div class="podium-rank">${i + 1}</div>
+      <div class="podium-name">${p.name}${p.eliminated ? ' <span style="color:var(--red);font-size:11px;">(elim.)</span>' : ''}</div>
+      <div class="podium-score">${p.score}</div>`;
+    podium.appendChild(item);
+  });
+}
+
+function renderFinalScores() {
+  const sorted = players.slice().sort((a, b) => b.score - a.score);
+  const podium = document.getElementById("finalScores");
+  podium.innerHTML = "";
+  sorted.forEach((p, i) => {
+    const item = document.createElement("div");
+    item.className = "podium-item" + (i === 0 ? " rank-1" : "");
+    item.innerHTML = `
+      <div class="podium-rank">${i + 1}</div>
+      <div class="podium-name">${p.name}${p.eliminated ? ' <span style="color:var(--red);font-size:11px;">(elim.)</span>' : ''}</div>
+      <div class="podium-score">${p.score}</div>`;
+    podium.appendChild(item);
+  });
+}
+
+function nextRound() {
+  const activePlayers = players.filter(p => !p.eliminated);
+  if (activePlayers.length <= 1 && players.length > 1) {
+    showScreen("gameover");
+    renderFinalScores();
+    return;
+  }
+  nextWord();
+}
+
+function endGame() {
+  showScreen("gameover");
+  renderFinalScores();
+}
+
+function resetGame() {
+  players = [];
+  currentPlayerIndex = 0;
+  usedWords = [];
+  roundActive = false;
+  document.getElementById("setupPlayers").innerHTML = "";
+  document.getElementById("setupStartCard").style.display = "none";
+  document.getElementById("setupPlayerInput").value = "";
+  showScreen("setup");
+}
+
+document.getElementById("guessInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") submitGuess();
+  if (e.key === "Escape") closeGuessModal();
+});
+</script>
+</body>
+</html>
