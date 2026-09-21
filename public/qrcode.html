@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code - Jogo da Forca</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #06060e;
+    color: #e8e8f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .container {
+    text-align: center;
+    max-width: 500px;
+  }
+  h1 {
+    font-size: 2em;
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    color: #8888aa;
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+  .qr-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .qr-box img {
+    display: block;
+    width: 300px;
+    height: 300px;
+  }
+  .url {
+    font-size: 12px;
+    color: #8888aa;
+    word-break: break-all;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+  }
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: #fff;
+  }
+  .btn-green {
+    background: linear-gradient(135deg, #00cec9, #55efc4);
+    color: #06060e;
+  }
+  .footer {
+    margin-top: 30px;
+    font-size: 11px;
+    color: #333355;
+  }
+  @media print {
+    body { background: #fff; }
+    h1 { -webkit-text-fill-color: #6c5ce7; }
+    .subtitle, .url, .actions, .footer { display: none; }
+    .qr-box { box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>FORCA - MATA39</h1>
+    <p class="subtitle">Escaneie para jogar!</p>
+    
+    <div class="qr-box">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://jogo-da-forca-mata39-2026-2.onrender.com/&format=png" 
+           alt="QR Code Jogo da Forca">
+    </div>
+    
+    <div class="url">https://jogo-da-forca-mata39-2026-2.onrender.com/</div>
+    
+    <div class="actions">
+      <a href="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://jogo-da-forca-mata39-2026-2.onrender.com/&format=png" 
+         download="qrcode-forca.png" class="btn btn-green">
+        Download PNG
+      </a>
+      <button onclick="window.print()" class="btn btn-primary">
+        Imprimir
+      </button>
+    </div>
+    
+    <div class="footer">MATA39 — 2026.2 — Equipe 3</div>
+  </div>
+</body>
+</html>
